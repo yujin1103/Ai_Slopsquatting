@@ -1,0 +1,15 @@
+react
+next
+express
+lodash
+axios
+typescript
+vite
+webpack
+jest
+eslint
+prettier
+jscodeshift
+react-codemod
+commander
+chalk
