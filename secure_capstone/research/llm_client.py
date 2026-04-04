@@ -44,45 +44,116 @@ class LLMResponse:
 
 def extract_packages(text: str, max_packages: int = 8) -> List[str]:
     """LLM 응답 텍스트에서 패키지명 추출"""
-    found = set()
+
+    # 설치 커맨드에서 추출한 이름은 신뢰도 높음 (별도 추적)
+    install_names: set[str] = set()
+    backtick_names: set[str] = set()
 
     # 패턴 1: 백틱으로 감싼 패키지명 `package-name`
-    for m in re.finditer(r'`([a-zA-Z0-9][a-zA-Z0-9_\-\.]{1,60})`', text):
-        found.add(m.group(1).strip())
+    for m in re.finditer(r'`([a-zA-Z0-9@][a-zA-Z0-9_\-\./@]{1,60})`', text):
+        backtick_names.add(m.group(1).strip())
 
     # 패턴 2: pip install package-name
     for m in re.finditer(r'pip install\s+([\w\-\.]+)', text, re.IGNORECASE):
-        found.add(m.group(1).strip())
+        install_names.add(m.group(1).strip())
 
     # 패턴 3: npm install package-name
     for m in re.finditer(r'npm install\s+([\w\-\.\/@]+)', text, re.IGNORECASE):
         pkg = m.group(1).strip()
-        # scoped 패키지 (@org/pkg) 유지, 플래그 제거
         if not pkg.startswith('-'):
-            found.add(pkg)
+            install_names.add(pkg)
 
     # 패턴 4: $ pip/npm 명령어 블록
     for m in re.finditer(r'(?:pip|npm)\s+install\s+([\w\-\.\/\@]+)', text, re.IGNORECASE):
         pkg = m.group(1).strip()
         if not pkg.startswith('-'):
-            found.add(pkg)
+            install_names.add(pkg)
 
-    # 불용어 필터링 (일반 영어 단어, 너무 짧거나 긴 이름)
+    # ── 필터 함수들 ──────────────────────────────────────────────────
+
     stopwords = {
         'the', 'and', 'for', 'with', 'that', 'this', 'from', 'can', 'you',
         'use', 'your', 'will', 'not', 'are', 'have', 'more', 'any', 'all',
         'it', 'is', 'in', 'or', 'as', 'an', 'to', 'a', 'be', 'has',
-        'pip', 'npm', 'install', 'python', 'node', 'js', 'py',
+        'pip', 'npm', 'install', 'python', 'node', 'js', 'py', 'true', 'false',
+        'none', 'null', 'self', 'cls', 'args', 'kwargs', 'return', 'import',
+        'model', 'models', 'data', 'input', 'output', 'tensor', 'layer',
+        'here', 'below', 'above', 'following', 'example', 'code', 'bash',
     }
-    cleaned = [
-        p for p in found
-        if p.lower() not in stopwords
-        and 2 <= len(p) <= 80
-        and not p.isdigit()
-        and re.match(r'^[@a-zA-Z0-9]', p)
-    ]
 
-    return cleaned[:max_packages]
+    # 1) Placeholder 패턴: your_*, my_*, dummy_*, *_name, *_file, *_input 등
+    _placeholder = re.compile(
+        r'^(your|my|example|sample|custom|test|demo|some|app|main|script|file|dummy|foo|bar)[-_]'
+        r'|[-_](name|file|path|filename|script|app|module|project|code|config|input|output|tensor|model|layer|data)$',
+        re.IGNORECASE,
+    )
+
+    # 2) 서브모듈/속성 경로: torch.quantization, torch.onnx.export, os.path 등
+    #    pip 패키지명에 '.'이 들어가는 경우는 극히 드물고, 설치명에선 '-' 사용
+    #    npm scoped 패키지(@org/pkg)는 예외 처리
+    def _is_submodule_path(name: str) -> bool:
+        if name.startswith('@'):   # @org/pkg — npm scoped, 허용
+            return False
+        if '.' not in name:
+            return False
+        parts = name.split('.')
+        # 점이 2개 이상: torch.onnx.export → 확실한 속성 경로
+        if len(parts) > 2:
+            return True
+        # 점이 1개: 뒤 부분이 소문자면 속성 접근 (torch.nn, os.path)
+        # 뒤 부분이 대문자 시작이면 네임스페이스 패키지일 수도 있으나 보수적으로 제거
+        return True
+
+    # 3) 클래스명 패턴 (설치 커맨드에 없고 백틱만에 있을 때)
+    #    PascalCase (CamelCase): MLFlowLogger, ImageDataGenerator, BertForSequenceClassification
+    _class_name = re.compile(
+        r'^[A-Z][a-z]+([A-Z][a-zA-Z0-9]*)+$'   # PascalCase: MyClass, ImageDataGenerator
+        r'|^[A-Z]{2,}[A-Z][a-z]',               # ALL_CAPS prefix: MLFlowLogger, GPTNeoModel
+    )
+
+    # 4) 파일 확장자 포함: your_app.py, model.pkl, config.json
+    _has_extension = re.compile(
+        r'\.(py|js|ts|json|yaml|yml|txt|pkl|pt|onnx|csv|md|sh|bat|exe)$',
+        re.IGNORECASE,
+    )
+
+    def _is_valid(name: str, from_install: bool) -> bool:
+        if name.lower() in stopwords:
+            return False
+        if not (2 <= len(name) <= 80):
+            return False
+        if name.isdigit():
+            return False
+        if not re.match(r'^[@a-zA-Z0-9]', name):
+            return False
+        if _placeholder.search(name):
+            return False
+        if _has_extension.search(name):
+            return False
+        if _is_submodule_path(name):
+            return False
+        # 클래스명 필터는 설치 커맨드에서 나온 이름에는 적용하지 않음
+        if not from_install and _class_name.match(name):
+            return False
+        return True
+
+    # ── 결합 및 우선순위 적용 ─────────────────────────────────────────
+    result: list[str] = []
+    seen: set[str] = set()
+
+    # 설치 커맨드 이름 먼저 (신뢰도 높음)
+    for name in install_names:
+        if _is_valid(name, from_install=True) and name not in seen:
+            result.append(name)
+            seen.add(name)
+
+    # 백틱 이름은 설치 커맨드에 없는 것만 추가 (중복 방지 + 추가 필터 적용)
+    for name in backtick_names:
+        if name not in seen and _is_valid(name, from_install=False):
+            result.append(name)
+            seen.add(name)
+
+    return result[:max_packages]
 
 
 # ─────────────────────────────────────────────────────

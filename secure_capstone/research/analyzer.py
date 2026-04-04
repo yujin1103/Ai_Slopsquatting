@@ -209,6 +209,42 @@ def generate_report(db: Database, output_path: str) -> str:
     return output_path
 
 
+def generate_json_report(db: Database, output_path: str) -> str:
+    """질문-답변 전체 데이터를 JSON 리포트로 생성.
+    각 실험의 질문, LLM 원본 응답, 추출 패키지, 검증 결과를 모두 포함."""
+    qa_data = db.get_full_qa_data()
+    progress = db.get_progress()
+    halluc = db.get_hallucination_stats()
+    risk_dist = db.get_risk_distribution()
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    report = {
+        "meta": {
+            "generated_at": now,
+            "description": "슬롭스쿼팅 연구 - 질문/답변 전체 리포트",
+        },
+        "summary": {
+            "total_experiments": progress["total_experiments"],
+            "total_packages": progress["total_packages"],
+            "hallucinations": progress["hallucinations"],
+            "hallucination_rate": progress["hallucination_rate"],
+            "model_counts": progress["model_counts"],
+        },
+        "stats": {
+            "by_model": halluc["by_model"],
+            "by_domain": halluc["by_domain"],
+            "high_risk_repeated": halluc["high_risk_repeated"],
+            "risk_distribution": risk_dist,
+        },
+        "experiments": qa_data,
+    }
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+
+    return output_path
+
+
 def print_summary(db: Database) -> None:
     """터미널에 요약 통계 출력 (rich 없이도 동작)"""
     try:

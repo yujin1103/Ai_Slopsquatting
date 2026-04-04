@@ -275,3 +275,65 @@ class Database:
             experiments = [dict(r) for r in conn.execute("SELECT * FROM experiments").fetchall()]
             packages = [dict(r) for r in conn.execute("SELECT * FROM packages").fetchall()]
         return experiments, packages
+
+    def get_full_qa_data(self) -> List[Dict]:
+        """질문-답변 전체 데이터를 JSON 리포트용으로 반환.
+        각 experiment에 대해 질문, LLM 원본 응답, 추출된 패키지 검증 결과를 포함."""
+        with self._conn() as conn:
+            experiments = conn.execute("""
+                SELECT id, question_id, question_text, domain, model_name,
+                       run_number, raw_response, tokens_used, latency_ms,
+                       error, created_at
+                FROM experiments
+                ORDER BY question_id, model_name, run_number
+            """).fetchall()
+
+            results = []
+            for exp in experiments:
+                exp_dict = dict(exp)
+                exp_id = exp_dict["id"]
+
+                # 해당 experiment의 패키지 검증 결과
+                pkgs = conn.execute("""
+                    SELECT package_name, ecosystem, pypi_exists, npm_exists,
+                           pypi_upload_date, npm_publish_date, days_since_published,
+                           version_count, has_repo_url, has_homepage, has_install_script,
+                           risk_score, risk_level, is_hallucination, similar_to
+                    FROM packages
+                    WHERE experiment_id = ?
+                    ORDER BY risk_score DESC
+                """, (exp_id,)).fetchall()
+
+                pkg_list = []
+                for p in pkgs:
+                    pd = dict(p)
+                    # boolean 변환
+                    for key in ("pypi_exists", "npm_exists", "has_repo_url",
+                                "has_homepage", "has_install_script", "is_hallucination"):
+                        pd[key] = bool(pd.get(key))
+                    # JSON 필드 파싱
+                    if pd.get("similar_to"):
+                        try:
+                            pd["similar_to"] = json.loads(pd["similar_to"])
+                        except (json.JSONDecodeError, TypeError):
+                            pass
+                    pkg_list.append(pd)
+
+                results.append({
+                    "experiment_id": exp_id,
+                    "question_id": exp_dict["question_id"],
+                    "question_text": exp_dict["question_text"],
+                    "domain": exp_dict["domain"],
+                    "model_name": exp_dict["model_name"],
+                    "run_number": exp_dict["run_number"],
+                    "raw_response": exp_dict["raw_response"],
+                    "tokens_used": exp_dict["tokens_used"],
+                    "latency_ms": exp_dict["latency_ms"],
+                    "error": exp_dict["error"],
+                    "created_at": exp_dict["created_at"],
+                    "packages": pkg_list,
+                    "package_count": len(pkg_list),
+                    "hallucination_count": sum(1 for p in pkg_list if p.get("is_hallucination")),
+                })
+
+            return results

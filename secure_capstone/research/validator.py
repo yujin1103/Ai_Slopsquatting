@@ -1,9 +1,12 @@
 """
-비동기 PyPI / npm 패키지 검증 모듈
-기존 main.py의 로직을 연구 파이프라인용으로 재구성
-- 존재 여부 확인
+비동기 PyPI / npm 패키지 검증 모듈 (연구 파이프라인용)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LLM 할루시네이션 연구 전용 — 패키지 존재 여부 판정에 집중.
+소스코드 악성 분석은 api/main.py (실제 탐지 도구)에서 수행.
+
+- 존재 여부 확인 (PyPI / npm)
 - 등록일, 버전 수 수집
-- 위험 점수 계산
+- 할루시네이션 여부 판정
 - 유사 패키지 탐지
 """
 
@@ -95,15 +98,18 @@ def _find_similar(name: str, popular: set, threshold: int = 85) -> List[str]:
 
 
 def _calculate_risk(info: PackageInfo) -> Tuple[int, str]:
-    """위험 점수 계산 (main.py 로직 기반 + 연구용 추가 항목)"""
+    """
+    연구용 위험도 판정 — 패키지 존재 여부 중심.
+    슬롭스쿼팅 공격 가능성(=할루시네이션 발생 빈도)을 측정하기 위한 점수.
+    """
     score = 0
 
-    # 존재하지 않음 → 최고 위험 (슬롭스쿼팅 가능 표면)
+    # 미등록 → 슬롭스쿼팅 공격 표면
     if not info.pypi_exists and not info.npm_exists:
         score += 60
         info.is_hallucination = True
 
-    # 최근 등록
+    # 최근 등록 (공격자가 방금 선점했을 가능성)
     if info.days_since_published is not None:
         if info.days_since_published <= 7:
             score += 25
@@ -130,17 +136,18 @@ def _calculate_risk(info: PackageInfo) -> Tuple[int, str]:
     if info.similar_to:
         score += 15
 
-    # 위험 레벨 결정
-    if score >= 80:
+    final_score = min(score, 100)
+
+    if final_score >= 80:
         level = "CRITICAL"
-    elif score >= 60:
+    elif final_score >= 60:
         level = "HIGH"
-    elif score >= 30:
+    elif final_score >= 30:
         level = "MEDIUM"
     else:
         level = "LOW"
 
-    return score, level
+    return final_score, level
 
 
 async def validate_package(
