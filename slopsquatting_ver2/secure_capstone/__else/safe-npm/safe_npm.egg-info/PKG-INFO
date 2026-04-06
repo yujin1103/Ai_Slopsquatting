@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: safe-npm
+Version: 0.1.0
+Summary: Pre-install package verifier against slopsquatting
+Requires-Python: >=3.10
+Requires-Dist: requests>=2.31.0
+Requires-Dist: typer>=0.12.0
+Requires-Dist: rich>=13.7.0
+Requires-Dist: rapidfuzz>=3.9.0
