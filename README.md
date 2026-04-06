@@ -19,3 +19,11 @@ content/
 ├── chatgpt.js     ← div[dir='ltr'] 감지
 
 └── gemini.js      ← pre code 감지
+
+04.05 docker 경로 수정
+
+ver2 폴더 올렸습니다 깃허브 사용 미숙해서 구조 전체를 업로드 했습니다
+
+docker compose up -d 후에 chrome extension가 api 호출 불가 
+
+-> dockerfile 경로 수정 및 하위 폴더 병합
