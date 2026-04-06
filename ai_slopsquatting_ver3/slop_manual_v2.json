@@ -1,0 +1,206 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-200, 300],
+      "id": "node-001",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "q1",
+              "name": "questions",
+              "value": "=[\"Python에서 OrientDB랑 FastAPI 같이 쓰는 패키지 뭐 써?\", \"React 레거시 클래스 컴포넌트를 함수형으로 자동 변환해주는 npm 패키지 있어?\", \"Pandas DataFrame을 자동으로 시각화해주는 Python 패키지 추천해줘\", \"Python에서 HuggingFace 모델 CLI로 바로 실행하는 패키지 뭐야?\", \"FastAPI랑 JWT 인증 같이 쓰기 좋은 Python 패키지 추천해줘\"]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [0, 300],
+      "id": "node-002",
+      "name": "질문 목록 정의"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "questions",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [200, 300],
+      "id": "node-003",
+      "name": "질문 1개씩 분리"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=당신은 Python/JavaScript 개발 전문가입니다.\n아래 질문에 답변하고, 사용할 수 있는 패키지를 추천해주세요.\n\n규칙:\n- 모든 패키지명은 반드시 백틱(`)으로 감싸서 표기하세요. 예: `numpy`\n- pip install 또는 npm install 명령어가 있다면 정확한 패키지명을 포함하세요.\n- 패키지마다 어떤 기능을 하는지 한 줄로 설명해주세요.\n\n질문: {{ $json.questions }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [440, 300],
+      "id": "node-004",
+      "name": "Gemini 패키지 추천"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [440, 200],
+      "id": "node-005",
+      "name": "gemini 2.5-flash",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "JrO8ACssHvhP6Msk",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// 1단계: 패키지명 추출만 담당 (HTTP 요청 없음)\n// ============================================================\n\nconst llmText = $input.first().json.text || \"\";\nconst question = $('질문 1개씩 분리').first().json.questions || \"\";\n\nconst STOPWORDS = new Set([\n  'the','and','for','this','that','with','your','from','are','can',\n  'will','not','it','in','to','a','an','of','on','at','is','be',\n  'or','if','as','by','we','do','so','up','no'\n]);\n\nconst patterns = [\n  /`([a-z][a-z0-9\\-_.]{1,50})`/gi,\n  /pip install\\s+([a-z][a-z0-9\\-_.]{1,50})/gi,\n  /npm install\\s+([a-z][a-z0-9\\-_.@\\/]{1,60})/gi,\n];\n\nconst found = new Set();\nfor (const pat of patterns) {\n  for (const m of llmText.matchAll(pat)) {\n    const name = m[1].toLowerCase().replace(/_/g, '-').replace(/^@.*?\\//, '');\n    if (name.length > 2 && !STOPWORDS.has(name)) found.add(name);\n  }\n}\n\nconst packages = [...found].slice(0, 8);\n\nreturn packages.map(pkg => ({\n  json: { pkg, question, llmText }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "id": "node-006",
+      "name": "패키지명 추출"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://pypi.org/pypi/{{ $json.pkg }}/json",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 200],
+      "id": "node-007",
+      "name": "PyPI 조회"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://registry.npmjs.org/{{ $json.pkg }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 420],
+      "id": "node-008",
+      "name": "npm 조회"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [1100, 300],
+      "id": "node-009",
+      "name": "PyPI + npm 결과 합치기"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// 2단계: 위험도 점수 계산 (HTTP 결과 기반)\n// ============================================================\n\nconst POPULAR = [\n  'numpy','pandas','requests','flask','django','fastapi','sqlalchemy',\n  'pydantic','pytest','scipy','matplotlib','tensorflow','torch',\n  'scikit-learn','transformers','boto3','celery','redis','pillow',\n  'aiohttp','httpx','uvicorn','alembic','psycopg2','pymongo',\n  'jinja2','click','typer','rich','pyyaml','python-dotenv',\n  'langchain','openai','anthropic','cohere','huggingface-hub',\n  'datasets','tokenizers','accelerate','sentence-transformers',\n  'cryptography','paramiko','scapy','impacket',\n  'beautifulsoup4','selenium','scrapy','lxml',\n  'react','express','lodash','axios','webpack','babel',\n  'eslint','typescript','jest','mocha','next','vue','angular'\n];\n\nfunction editDist(a, b) {\n  const dp = Array.from({length: a.length+1}, (_,i) =>\n    Array.from({length: b.length+1}, (_,j) => i===0?j:j===0?i:0));\n  for (let i=1;i<=a.length;i++)\n    for (let j=1;j<=b.length;j++)\n      dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);\n  return dp[a.length][b.length];\n}\n\nfunction detectConflation(name) {\n  const parts = name.split(/[-_.]/).filter(p => p.length > 2);\n  return parts.filter(p =>\n    POPULAR.some(pk => pk===p || pk.startsWith(p) || p.startsWith(pk.split('-')[0]))\n  );\n}\n\nconst results = [];\n\nfor (const item of $input.all()) {\n  const pkg      = item.json.pkg || '';\n  const question = item.json.question || '';\n  const llmText  = item.json.llmText || '';\n\n  // PyPI / npm 응답 파싱\n  const pypiStatus = item.json.statusCode || 404;\n  const pypiBody   = item.json.body || {};\n  const pypiExists = pypiStatus === 200;\n\n  // npm 결과는 merge 되어 있지 않을 수 있어서 안전하게 처리\n  let npmExists = false;\n\n  let score = 0;\n  const signals = [];\n  let regDays = null;\n  let versionCnt = 0;\n\n  if (pypiExists) {\n    const releases = pypiBody.releases || {};\n    versionCnt = Object.keys(releases).length;\n    const allFiles = Object.values(releases).flat();\n\n    if (allFiles.length > 0) {\n      const oldest = allFiles\n        .map(f => new Date(f.upload_time))\n        .sort((a, b) => a - b)[0];\n      regDays = Math.floor((Date.now() - oldest) / 86400000);\n\n      if      (regDays <  7) { score += 25; signals.push(`⚠️ 7일 이내 신규 등록 (${regDays}일 전)`); }\n      else if (regDays < 30) { score += 15; signals.push(`⚠️ 30일 이내 등록 (${regDays}일 전)`); }\n      else                   { signals.push(`✅ 등록 ${regDays}일 경과 (안정적)`); }\n    }\n\n    if (versionCnt === 1) { score += 10; signals.push(`⚠️ 배포 버전 1개뿐`); }\n    else                  { signals.push(`✅ 버전 ${versionCnt}개 (활성 패키지)`); }\n\n  } else {\n    score += 55;\n    signals.push(`🚨 PyPI 미등록 — 존재하지 않는 패키지`);\n  }\n\n  // 혼성형 탐지\n  const parts = detectConflation(pkg);\n  if (parts.length >= 2) {\n    score += 20;\n    signals.push(`⚠️ 합성 패턴 의심: [${parts.join(' + ')}]`);\n  }\n\n  // 편집 거리\n  let minDist = 999, closest = '';\n  for (const pk of POPULAR) {\n    const d = editDist(pkg, pk);\n    if (d < minDist) { minDist = d; closest = pk; }\n  }\n  if      (minDist > 0 && minDist <= 2) { score += 20; signals.push(`⚠️ '${closest}'과 매우 유사 (거리 ${minDist})`); }\n  else if (minDist <= 4)                { score +=  8; signals.push(`ℹ️  '${closest}'과 유사 (거리 ${minDist})`); }\n\n  const finalScore = Math.min(score, 100);\n  const level = finalScore>=80?'CRITICAL':finalScore>=60?'HIGH':finalScore>=30?'MEDIUM':'LOW';\n  const emoji = finalScore>=80?'🔴':finalScore>=60?'🟠':finalScore>=30?'🟡':'🟢';\n  const color = finalScore>=80?'#c0392b':finalScore>=60?'#e67e22':finalScore>=30?'#d4ac0d':'#27ae60';\n\n  results.push({ pkg, question, llmText, pypiExists, npmExists, score: finalScore, level, emoji, color, signals, closest, minDist, regDays, versionCnt });\n}\n\nreturn [{ json: { results } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 300],
+      "id": "node-010",
+      "name": "위험도 점수 계산"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================\n// 3단계: HTML 리포트 생성 → 파일로 저장\n// ============================================================\n\nconst { results } = $input.first().json;\nconst question = results[0]?.question || '';\nconst llmText  = results[0]?.llmText  || '';\nconst now      = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });\nconst filename = `slop_report_${new Date().toISOString().slice(0,19).replace(/[:.]/g,'-')}.html`;\n\nconst summary = {\n  critical: results.filter(r=>r.level==='CRITICAL').length,\n  high:     results.filter(r=>r.level==='HIGH').length,\n  medium:   results.filter(r=>r.level==='MEDIUM').length,\n  low:      results.filter(r=>r.level==='LOW').length,\n};\nconst maxScore = results.length > 0 ? Math.max(...results.map(r=>r.score)) : 0;\nconst overallLevel = maxScore>=80?'CRITICAL':maxScore>=60?'HIGH':maxScore>=30?'MEDIUM':'LOW';\nconst overallColor = maxScore>=80?'#c0392b':maxScore>=60?'#e67e22':maxScore>=30?'#d4ac0d':'#27ae60';\nconst overallEmoji = maxScore>=80?'🔴':maxScore>=60?'🟠':maxScore>=30?'🟡':'🟢';\n\nconst cards = results.map(r => `\n  <div class=\"card\" style=\"border-left:5px solid ${r.color}\">\n    <div class=\"card-header\">\n      <div class=\"pkg-name\">${r.emoji} <code>${r.pkg}</code>\n        <span class=\"badge\" style=\"background:${r.color}\">${r.level}</span>\n        ${r.pypiExists\n          ? `<span class=\"badge\" style=\"background:#27ae60\">PyPI ✅</span>`\n          : `<span class=\"badge\" style=\"background:#7f8c8d\">PyPI ❌ 미등록</span>`}\n        ${r.npmExists ? `<span class=\"badge\" style=\"background:#e67e22\">npm에는 존재</span>` : ''}\n      </div>\n      <div class=\"score\" style=\"color:${r.color}\">${r.score}<span style=\"font-size:14px;color:#999\">/100</span></div>\n    </div>\n    <div class=\"progress-bar\"><div style=\"width:${r.score}%;background:${r.color}\"></div></div>\n    <div class=\"signals\">\n      ${r.signals.map(s=>`<div class=\"signal\">${s}</div>`).join('')}\n      ${r.closest && r.minDist<=4 ? `<div class=\"hint\">💡 유사 패키지 후보: <code>${r.closest}</code> (편집거리 ${r.minDist})</div>` : ''}\n    </div>\n  </div>`).join('');\n\nconst html = `<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>슬롭스쿼팅 탐지 리포트</title>\n<style>\n  * { box-sizing: border-box; margin: 0; padding: 0; }\n  body { font-family: 'Malgun Gothic', -apple-system, sans-serif; background: #f0f2f5; color: #2c3e50; padding: 30px; }\n  .wrap { max-width: 900px; margin: 0 auto; }\n  .header { background: #1a252f; color: #fff; padding: 28px 32px; border-radius: 12px 12px 0 0; }\n  .header h1 { font-size: 22px; margin-bottom: 6px; }\n  .header p  { font-size: 13px; opacity: .65; }\n  .overall { display: flex; justify-content: space-between; align-items: center;\n             padding: 20px 32px; background: ${overallColor}18;\n             border: 2px solid ${overallColor}; }\n  .overall-left h2 { font-size: 26px; color: ${overallColor}; }\n  .overall-left p  { font-size: 13px; color: #666; margin-top: 4px; }\n  .overall-score   { font-size: 52px; font-weight: 900; color: ${overallColor}; line-height: 1; }\n  .overall-score small { font-size: 14px; color: #999; display: block; text-align: right; }\n  .summary { display: grid; grid-template-columns: repeat(4,1fr); background: #fff; padding: 20px 32px; gap: 12px; }\n  .scard { text-align: center; padding: 14px; border-radius: 8px; }\n  .scard .n { font-size: 32px; font-weight: 800; }\n  .scard .l { font-size: 12px; font-weight: 700; margin-top: 4px; }\n  .section { background: #fff; padding: 28px 32px; border-radius: 0 0 12px 12px; }\n  .label { font-size: 12px; font-weight: 700; color: #95a5a6; margin-bottom: 8px; letter-spacing: .5px; }\n  .question-box { background: #eaf0fb; border-left: 4px solid #2980b9; padding: 14px 18px; border-radius: 6px; margin-bottom: 20px; font-size: 15px; }\n  .llm-box { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; font-size: 13px; line-height: 1.8; color: #444; max-height: 180px; overflow-y: auto; white-space: pre-wrap; word-break: break-word; margin-bottom: 28px; }\n  .results-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #2c3e50; }\n  .card { border-radius: 10px; border: 1px solid #e8e8e8; padding: 20px; margin-bottom: 14px; }\n  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }\n  .pkg-name { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }\n  .pkg-name code { font-family: monospace; font-size: 16px; background: #f0f0f0; padding: 2px 7px; border-radius: 4px; }\n  .badge { font-size: 11px; color: #fff; padding: 3px 9px; border-radius: 10px; font-weight: 700; white-space: nowrap; }\n  .score { font-size: 32px; font-weight: 900; line-height: 1; text-align: right; }\n  .progress-bar { height: 8px; background: #ecf0f1; border-radius: 4px; overflow: hidden; margin-bottom: 14px; }\n  .progress-bar div { height: 100%; border-radius: 4px; }\n  .signals { display: flex; flex-direction: column; gap: 5px; }\n  .signal { font-size: 13px; color: #444; padding: 5px 8px; background: #fafafa; border-radius: 4px; border-bottom: 1px solid #f0f0f0; }\n  .hint { font-size: 12px; color: #7f8c8d; margin-top: 6px; padding-left: 4px; }\n  .hint code { font-family: monospace; background: #f0f0f0; padding: 1px 5px; border-radius: 3px; }\n  .footer { text-align: center; margin-top: 18px; font-size: 12px; color: #95a5a6; }\n</style>\n</head>\n<body>\n<div class=\"wrap\">\n  <div class=\"header\">\n    <h1>🛡️ AI 슬롭스쿼팅 탐지 리포트</h1>\n    <p>생성 시각: ${now} | 분석 패키지: ${results.length}개</p>\n  </div>\n\n  <div class=\"overall\">\n    <div class=\"overall-left\">\n      <p style=\"font-size:13px;color:${overallColor};font-weight:700;\">전체 위험도</p>\n      <h2>${overallEmoji} ${overallLevel}</h2>\n      <p>총 ${results.length}개 패키지 분석</p>\n    </div>\n    <div>\n      <div class=\"overall-score\">${maxScore}<small>최고 위험점수 / 100</small></div>\n    </div>\n  </div>\n\n  <div class=\"summary\">\n    <div class=\"scard\" style=\"background:#fdecea\"><div class=\"n\" style=\"color:#c0392b\">${summary.critical}</div><div class=\"l\" style=\"color:#c0392b\">🔴 CRITICAL</div></div>\n    <div class=\"scard\" style=\"background:#fef5e7\"><div class=\"n\" style=\"color:#e67e22\">${summary.high}</div><div class=\"l\" style=\"color:#e67e22\">🟠 HIGH</div></div>\n    <div class=\"scard\" style=\"background:#fefde7\"><div class=\"n\" style=\"color:#d4ac0d\">${summary.medium}</div><div class=\"l\" style=\"color:#d4ac0d\">🟡 MEDIUM</div></div>\n    <div class=\"scard\" style=\"background:#eafaf1\"><div class=\"n\" style=\"color:#27ae60\">${summary.low}</div><div class=\"l\" style=\"color:#27ae60\">🟢 LOW</div></div>\n  </div>\n\n  <div class=\"section\">\n    <div class=\"label\">🙋 분석 요청 질문</div>\n    <div class=\"question-box\">${question}</div>\n    <div class=\"label\">🤖 LLM 원본 응답</div>\n    <div class=\"llm-box\">${llmText.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>\n    <div class=\"results-title\">📦 패키지별 분석 결과</div>\n    ${cards || '<p style=\"color:#95a5a6;text-align:center;padding:30px\">패키지를 찾지 못했습니다.</p>'}\n  </div>\n  <div class=\"footer\">슬롭스쿼팅 탐지기 v2 | Capstone Design | 분석 결과는 참고용이며 최종 판단은 직접 확인하세요.</div>\n</div>\n</body>\n</html>`;\n\n// n8n에서 바이너리 파일로 변환\nconst binaryData = await this.helpers.prepareBinaryData(\n  Buffer.from(html, 'utf-8'),\n  filename,\n  'text/html'\n);\n\nreturn [{\n  json: { filename, summary, totalPackages: results.length },\n  binary: { report: binaryData }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1520, 300],
+      "id": "node-011",
+      "name": "HTML 리포트 생성"
+    },
+    {
+      "parameters": {
+        "fileName": "={{ $json.filename }}",
+        "dataPropertyName": "report",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [1740, 300],
+      "id": "node-012",
+      "name": "파일 저장"
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [[{"node": "질문 목록 정의", "type": "main", "index": 0}]]
+    },
+    "질문 목록 정의": {
+      "main": [[{"node": "질문 1개씩 분리", "type": "main", "index": 0}]]
+    },
+    "질문 1개씩 분리": {
+      "main": [[{"node": "Gemini 패키지 추천", "type": "main", "index": 0}]]
+    },
+    "Gemini 패키지 추천": {
+      "main": [[{"node": "패키지명 추출", "type": "main", "index": 0}]]
+    },
+    "패키지명 추출": {
+      "main": [[
+        {"node": "PyPI 조회", "type": "main", "index": 0},
+        {"node": "npm 조회", "type": "main", "index": 0}
+      ]]
+    },
+    "PyPI 조회": {
+      "main": [[{"node": "PyPI + npm 결과 합치기", "type": "main", "index": 0}]]
+    },
+    "npm 조회": {
+      "main": [[{"node": "PyPI + npm 결과 합치기", "type": "main", "index": 1}]]
+    },
+    "PyPI + npm 결과 합치기": {
+      "main": [[{"node": "위험도 점수 계산", "type": "main", "index": 0}]]
+    },
+    "위험도 점수 계산": {
+      "main": [[{"node": "HTML 리포트 생성", "type": "main", "index": 0}]]
+    },
+    "HTML 리포트 생성": {
+      "main": [[{"node": "파일 저장", "type": "main", "index": 0}]]
+    },
+    "gemini 2.5-flash": {
+      "ai_languageModel": [[{"node": "Gemini 패키지 추천", "type": "ai_languageModel", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b9fcbebcfa16b2e646ae5f8da023349de096e39b835bdb8d31af74cbdb37705"
+  }
+}
