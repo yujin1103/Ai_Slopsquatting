@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>슬롭스쿼팅 탐지 리포트 v7</title>
+<style>* { box-sizing:border-box; margin:0; padding:0; } body { font-family:'Malgun Gothic',-apple-system,sans-serif; background:#f0f2f5; color:#2c3e50; padding:30px; } .wrap { max-width:960px; margin:0 auto; }</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="background:#1a252f;color:#fff;padding:28px 32px;border-radius:12px 12px 0 0;">
+    <h1 style="font-size:22px;margin-bottom:6px;">🛡️ AI 슬롭스쿼팅 탐지 리포트 — 멀티모델 v7</h1>
+    <p style="font-size:13px;opacity:.65;">생성: 2026. 3. 15. AM 12:37:35 | 모델: Gemini + Cohere + Groq | 패키지 15개 | 질문 5개</p>
+    <span style="display:inline-block;background:#2c3e50;color:#ecf0f1;font-size:12px;font-weight:700;padding:4px 12px;border-radius:12px;margin-top:10px;">🔀 복합 생태계</span>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 32px;background:#c0392b18;border:2px solid #c0392b;">
+    <div>
+      <p style="font-size:13px;color:#c0392b;font-weight:700;">전체 위험도</p>
+      <h2 style="font-size:26px;color:#c0392b;margin-top:4px;">🔴 CRITICAL</h2>
+      <p style="font-size:13px;color:#666;margin-top:4px;">총 15개 패키지 분석</p>
+    </div>
+    <div style="font-size:52px;font-weight:900;color:#c0392b;line-height:1;">80<span style="font-size:14px;color:#999;display:block;text-align:right;">최고점수 / 100</span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);background:#fff;padding:20px 32px;gap:12px;">
+    <div style="text-align:center;padding:14px;border-radius:8px;background:#fdecea;"><div style="font-size:32px;font-weight:800;color:#c0392b;">4</div><div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">🔴 CRITICAL</div></div>
+    <div style="text-align:center;padding:14px;border-radius:8px;background:#fef5e7;"><div style="font-size:32px;font-weight:800;color:#e67e22;">0</div><div style="font-size:12px;font-weight:700;color:#e67e22;margin-top:4px;">🟠 HIGH</div></div>
+    <div style="text-align:center;padding:14px;border-radius:8px;background:#fefde7;"><div style="font-size:32px;font-weight:800;color:#d4ac0d;">0</div><div style="font-size:12px;font-weight:700;color:#d4ac0d;margin-top:4px;">🟡 MEDIUM</div></div>
+    <div style="text-align:center;padding:14px;border-radius:8px;background:#eafaf1;"><div style="font-size:32px;font-weight:800;color:#27ae60;">11</div><div style="font-size:12px;font-weight:700;color:#27ae60;margin-top:4px;">🟢 LOW</div></div>
+  </div>
+
+  <div style="background:#fff;padding:24px 32px;border-top:1px solid #f0f0f0;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:14px;">📊 모델별 환각률 비교</div>
+    <div style="display:flex;gap:12px;"><div style="flex:1;background:#fafafa;border:1px solid #e8e8e8;border-radius:8px;padding:14px;text-align:center;">
+    <div style="font-size:12px;font-weight:700;color:#4285f4;margin-bottom:6px;">Gemini</div>
+    <div style="font-size:28px;font-weight:900;color:#e67e22">27%</div>
+    <div style="font-size:11px;color:#95a5a6;margin-top:4px;">환각률 (4/15)</div>
+  </div><div style="flex:1;background:#fafafa;border:1px solid #e8e8e8;border-radius:8px;padding:14px;text-align:center;">
+    <div style="font-size:12px;font-weight:700;color:#3a86ff;margin-bottom:6px;">Cohere</div>
+    <div style="font-size:28px;font-weight:900;color:#27ae60">0%</div>
+    <div style="font-size:11px;color:#95a5a6;margin-top:4px;">환각률 (0/3)</div>
+  </div><div style="flex:1;background:#fafafa;border:1px solid #e8e8e8;border-radius:8px;padding:14px;text-align:center;">
+    <div style="font-size:12px;font-weight:700;color:#f72585;margin-bottom:6px;">Groq</div>
+    <div style="font-size:28px;font-weight:900;color:#27ae60">0%</div>
+    <div style="font-size:11px;color:#95a5a6;margin-top:4px;">환각률 (0/3)</div>
+  </div></div>
+  </div>
+
+  <div style="background:#fff;padding:28px 32px;border-radius:0 0 12px 12px;border-top:1px solid #f0f0f0;">
+    <div style="font-size:12px;font-weight:700;color:#95a5a6;margin-bottom:12px;">🤖 모델별 원본 응답 (질문별 구분)</div>
+    
+  <div style="margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:700;color:#4285f4;margin-bottom:10px;">Gemini 응답</div>
+    
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야? <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Python에서 `Neo4j`와 `Celery`를 동시에 사용하는 단일 통합 패키지는 존재하지 않습니다. 이 두 기술은 각각 데이터베이스(그래프 데이터 저장 및 질의)와 분산 태스크 큐(비동기 작업 처리)라는 매우 다른 목적을 가지고 있기 때문입니다.
+
+대신, 애플리케이션 개발 시 **독립적인 라이브러리들을 함께 사용하여 기능을 통합**합니다. 즉, `Celery`를 사용하여 비동기 작업을 스케줄링하고 실행하며, 이 비동기 작업 내에서 `neo4j` (또는 다른 Neo4j 드라이버) 라이브러리를 통해 Neo4j 데이터베이스와 상호작용하게 됩니다.
+
+아래는 Python에서 Neo4j와 Celery를 함께 사용할 때 추천하는 패키지들입니다.
+
+---
+
+### Python + Neo4j + Celery 통합을 위한 추천 패키지
+
+**1. Neo4j 데이터베이스 연동 관련**
+
+*   `neo4j`
+    *   `pip install neo4j`
+    *   Neo4j의 공식 Python 드라이버로, Neo4j 데이터베이스와 통신하는 데 사용됩니다.
+
+*   `py2neo`
+    *   `pip install py2neo`
+    *   Neo4j와 상호작용하기 위한 더 객체 지향적인(ORM-like) 라이브러리로, 그래프 데이터를 Python 객체로 매핑하는 데 유용할 수 있습니다.
+
+**2. Celery 분산 태스크 큐 관련**
+
+*   `celery`
+    *   `pip install celery`
+    *   Python에서 비동기 작업을 처리하고 스케줄링하기 위한 분산 태스크 큐 시스템의 핵심 라이브러리입니다.
+
+**3. Celery 브로커(Broker) 및 결과 백엔드(Result Backend) 관련 (필수)**
+
+`Celery`는 작업을 보내고 받을 브로커와 작업 결과를 저장할 백엔드가 필요합니다. `Neo4j`는 Celery 브로커나 백엔드로 직접 사용되지 않으므로, 다음 중 하나를 선택해야 합니다.
+
+*   `redis`
+    *   `pip install redis`
+    *   Redis를 Celery의 브로커 및/또는 결과 백엔드로 사용할 때 필요한 Python 클라이언트 라이브러리입니다.
+
+*   `amqp` (RabbitMQ를 사용할 경우)
+    *   `pip install 'celery[librabbitmq]'` 또는 `pip install kombu`
+    *   RabbitMQ를 Celery의 브로커로 사용할 때 필요한 `kombu` (Celery의 의존성) 및 `librabbitmq` (최적화된 AMQP 클라이언트) 관련 패키지입니다.
+
+**4. 기타 개발 편의를 위한 패키지**
+
+*   `python-dotenv`
+    *   `pip install python-dotenv`
+    *   `.env` 파일에서 환경 변수를 로드하여 데이터베이스 연결 정보, Celery 설정 등을 관리하는 데 유용합니다.
+
+*   `loguru` (또는 표준 `logging` 모듈)
+    *   `pip install loguru`
+    *   Celery 작업이 Neo4j와 상호작용할 때 발생하는 이벤트나 오류를 효과적으로 로깅하여 디버깅 및 모니터링을 돕습니다.
+
+---
+
+**통합 예시 (개념적)**
+
+```python
+# app.py (메인 애플리케이션)
+from celery import Celery
+from neo4j import GraphDatabase
+import os
+
+# 환경 변수 로드 (선택 사항)
+from dotenv import load_dotenv
+load_dotenv()
+
+# Celery 설정
+celery_app = Celery(
+    'my_app',
+    broker=os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0'),
+    backend=os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/1')
+)
+
+# Neo4j 드라이버 인스턴스 (메인 앱에서 또는 Celery 태스크에서 직접 생성)
+# 일반적으로 각 태스크가 필요한 만큼 드라이버를 생성하거나, 풀을 관리합니다.
+NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
+NEO4J_USER = os.getenv('NEO4J_USER', 'neo4j')
+NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', 'password')
+
+# Celery 태스크 정의
+@celery_app.task
+def process_user_data(user_id, data):
+    # 각 태스크 내에서 Neo4j 드라이버 연결
+    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    with driver.session() as session:
+        # Neo4j 작업 수행
+        query = (
+            "MERGE (u:User {id: $user_id}) "
+            "SET u.name = $name, u.email = $email "
+            "RETURN u"
+        )
+        result = session.run(query, user_id=user_id, name=data['name'], email=data['email'])
+        print(f"Neo4j: Processed user {user_id}: {result.single()[0]['name']}")
+    driver.close()
+    return f"User {user_id} data processed in Neo4j."
+
+# 예시: Celery 태스크 호출
+if __name__ == '__main__':
+    user_data = {"name": "Alice", "email": "alice@example.com"}
+    task = process_user_data.delay(123, user_data)
+    print(f"Celery task sent with ID: {task.id}")
+    # print(f"Task result: {task.get(timeout=10)}") # 결과 기다리기 (선택 사항)
+```
+
+이와 같이, `celery`와 `neo4j`는 각각의 역할을 수행하며 Python 애플리케이션 코드 내에서 통합됩니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: React 코드모드 자동화해주는 npx 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🟨 JS</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">안녕하세요! React 코드모드 자동화를 위한 `npx` 패키지를 추천해 드리겠습니다. `npx`는 로컬에 패키지를 설치하지 않고도 실행할 수 있어, 일회성으로 코드 변환 작업을 수행할 때 매우 유용합니다.
+
+React 코드모드 자동화의 핵심은 코드의 추상 구문 트리(AST)를 분석하고 변경하는 것입니다. 이를 위한 대표적인 패키지들을 소개합니다.
+
+---
+
+### React 코드모드 자동화를 위한 `npx` 패키지 추천
+
+1.  `react-codemod`
+    *   **설명:** React 프로젝트에서 구 버전 API를 최신 버전으로 마이그레이션하거나 일반적인 리팩토링 작업을 자동화하는 데 사용되는 공식 및 커뮤니티 codemod 컬렉션입니다.
+    *   **설치/실행:** `npx react-codemod &lt;transform-name&gt; &lt;path/to/files&gt;`
+    *   **예시:** `npx react-codemod rename-unsafe-lifecycles src` (이 코드는 `componentWillMount`, `componentWillReceiveProps`, `componentWillUpdate`와 같은 unsafe lifecycle 메서드를 `UNSAFE_componentWillMount` 등으로 리팩토링합니다.)
+    *   **추가 정보:** 이 패키지 안에는 다양한 변환 스크립트가 포함되어 있으며, `jscodeshift`를 기반으로 작동합니다. React 버전 업그레이드 시 매우 유용합니다.
+
+2.  `jscodeshift`
+    *   **설명:** JavaScript/TypeScript 코드의 AST(Abstract Syntax Tree)를 기반으로 코드를 분석하고 변형하는 강력한 도구로, 사용자 정의 codemod를 작성할 때 주로 사용됩니다.
+    *   **설치/실행:** `npx jscodeshift -t &lt;path/to/transform.js&gt; &lt;path/to/files&gt;`
+    *   **예시:** `npx jscodeshift -t my-custom-transform.js src` (여기서 `my-custom-transform.js`는 여러분이 직접 작성한 codemod 스크립트입니다.)
+    *   **추가 정보:** `react-codemod`를 포함한 많은 codemod 라이브러리가 이 `jscodeshift`를 기반으로 합니다. 특정 요구사항에 맞는 복잡한 코드 변환이 필요할 때 직접 codemod를 작성하는 데 필수적인 도구입니다.
+
+3.  `@next/codemod`
+    *   **설명:** Next.js 프로젝트를 업그레이드하거나 특정 패턴으로 리팩토링할 때 사용하는 Next.js 전용 codemod 모음입니다. (Next.js는 React 기반 프레임워크이므로 React 프로젝트에 간접적으로 관련될 수 있습니다.)
+    *   **설치/실행:** `npx @next/codemod &lt;transform-name&gt; &lt;path/to/files&gt;`
+    *   **예시:** `npx @next/codemod next-image-to-legacy-image pages` (Next.js 13 이상에서 `&lt;Image&gt;` 컴포넌트를 변경하는 등의 변환을 수행합니다.)
+    *   **추가 정보:** 만약 여러분의 React 프로젝트가 Next.js를 사용한다면, 이 패키지가 특정 Next.js 관련 마이그레이션에 매우 유용할 것입니다.
+
+---
+
+### 코드모드 사용 시 주의사항
+
+*   **항상 백업하세요:** 코드모드는 실제 소스 코드를 변경하므로, 실행 전에 반드시 버전 관리 시스템(Git 등)을 통해 코드를 커밋하거나 수동으로 백업해두는 것이 좋습니다.
+*   **변경 사항 검토:** 코드모드 실행 후에는 `git diff`와 같은 명령어로 변경된 내용을 꼼꼼히 검토하여 의도한 대로 동작하는지 확인해야 합니다.
+*   **테스트 실행:** 가능하다면 프로덕션 코드에 적용하기 전에 작은 파일이나 테스트용 브랜치에서 먼저 실행하여 결과를 확인하는 것이 좋습니다.
+
+이 패키지들을 활용하여 React 프로젝트의 코드 변경 작업을 효율적으로 자동화하시길 바랍니다!</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Python에서 HuggingFace 모델 CLI로 바로 실행하는 패키지 뭐야? <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Hugging Face 모델을 Python 환경에서 CLI로 "바로 실행"하는 단일 패키지는 존재하지 않습니다. 즉, `huggingface run &lt;model_name&gt; &lt;input_text&gt;`와 같은 범용적인 CLI 명령어는 기본 `transformers` 라이브러리 내에 포함되어 있지 않습니다.
+
+하지만 Hugging Face 모델은 Python 스크립트를 통해 쉽게 로드하고 실행할 수 있으며, 이 Python 스크립트를 CLI에서 실행함으로써 원하는 기능을 구현할 수 있습니다. 이것이 사실상 Hugging Face 모델을 CLI처럼 사용하는 가장 일반적이고 권장되는 방법입니다.
+
+아래에서는 이 방법과 함께 사용할 수 있는 핵심 패키지들을 추천해 드립니다.
+
+---
+
+### Python에서 Hugging Face 모델 CLI처럼 실행하기 (스크립트 예시)
+
+가장 간단하게 모델을 CLI처럼 실행하는 방법은 Python 스크립트를 작성하고 `argparse` 모듈을 사용하여 CLI 인자를 받는 것입니다.
+
+**예시 스크립트 (`run_hf_model.py`):**
+
+```python
+import argparse
+from transformers import pipeline
+
+def main():
+    parser = argparse.ArgumentParser(description="Run a Hugging Face model from the command line.")
+    parser.add_argument("--model", type=str, required=True, help="Hugging Face model ID (e.g., 'distilbert-base-uncased-finetuned-sst-2-english')")
+    parser.add_argument("--task", type=str, default="sentiment-analysis", help="Hugging Face pipeline task (e.g., 'sentiment-analysis', 'text-generation', 'translation_en_to_fr')")
+    parser.add_argument("--input", type=str, required=True, help="Input text for the model")
+
+    args = parser.parse_args()
+
+    # 모델 로드 및 파이프라인 생성
+    print(f"Loading model: {args.model} for task: {args.task}...")
+    try:
+        classifier = pipeline(args.task, model=args.model)
+        
+        # 추론 실행
+        result = classifier(args.input)
+        print("\n--- Model Output ---")
+        print(result)
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        print("Please check the model ID, task name, and ensure necessary libraries are installed.")
+
+if __name__ == "__main__":
+    main()
+```
+
+**CLI에서 실행하는 방법:**
+
+```bash
+python run_hf_model.py --model distilbert-base-uncased-finetuned-sst-2-english --task sentiment-analysis --input "This movie was absolutely fantastic!"
+```
+
+```bash
+python run_hf_model.py --model google/flan-t5-small --task text2text-generation --input "Translate to French: Hello, how are you?"
+```
+
+---
+
+### 추천 패키지
+
+다음은 Hugging Face 모델을 사용하고 위와 같은 스크립트를 실행하는 데 필요한 주요 Python 패키지들입니다:
+
+1.  `transformers`
+    *   **pip install:** `pip install transformers`
+    *   **설명:** Hugging Face 모델을 로드, 추론 및 훈련하는 데 필요한 모든 핵심 기능을 제공하는 라이브러리입니다.
+
+2.  `torch` 또는 `tensorflow` 또는 `jax`
+    *   **pip install (PyTorch):** `pip install torch` (CUDA 지원이 필요한 경우 별도 설치 가이드 참조)
+    *   **pip install (TensorFlow):** `pip install tensorflow`
+    *   **pip install (JAX):** `pip install jax jaxlib`
+    *   **설명:** `transformers` 라이브러리의 백엔드 역할을 하는 딥러닝 프레임워크입니다. 모델에 따라 이 중 하나가 필요하며, 일반적으로 `torch`가 가장 널리 사용됩니다.
+
+3.  `accelerate`
+    *   **pip install:** `pip install accelerate`
+    *   **설명:** 분산 환경(다중 GPU, TPU)에서 모델 훈련 및 추론을 더 쉽게 할 수 있도록 돕는 Hugging Face의 라이브러리입니다.
+
+4.  `sentencepiece`
+    *   **pip install:** `pip install sentencepiece`
+    *   **설명:** SentencePiece 기반 토크나이저를 사용하는 모델(예: T5, LLaMA)에 필요한 서브워드 토크나이징 라이브러리입니다. `transformers`가 자동으로 설치할 수 있습니다.
+
+5.  `tokenizers`
+    *   **pip install:** `pip install tokenizers`
+    *   **설명:** Hugging Face의 Rust 기반 고성능 토크나이저 라이브러리로, 매우 빠른 토크나이징을 제공하며 `transformers`가 내부적으로 사용합니다.
+
+6.  `datasets`
+    *   **pip install:** `pip install datasets`
+    *   **설명:** Hugging Face Hub에서 다양한 데이터셋을 로드하고 전처리하는 데 사용되는 라이브러리입니다. 모델 실행 자체와는 직접적인 관련이 적지만, Hugging Face 생태계에서 매우 유용합니다.
+
+7.  `evaluate`
+    *   **pip install:** `pip install evaluate`
+    *   **설명:** 다양한 벤치마크, 메트릭, 허브의 평가 스크립트를 사용하여 모델의 성능을 평가하는 데 사용되는 라이브러리입니다.
+
+---
+
+**결론적으로,** Hugging Face 모델을 CLI처럼 사용하려면 `transformers` 라이브러리를 사용하여 Python 스크립트를 작성하고, 이 스크립트를 `python your_script.py --arg1 value` 형태로 실행하는 것이 표준입니다. `argparse` 모듈을 사용하면 스크립트에 깔끔한 CLI 인터페이스를 구축할 수 있습니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: FastAPI랑 JWT 인증 같이 쓰기 좋은 Python 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">안녕하세요! Python/JavaScript 개발 전문가로서 FastAPI와 JWT 인증을 함께 사용하기 위한 최고의 Python 패키지들을 추천해 드립니다.
+
+아래 패키지들을 조합하면 강력하고 안전한 인증 시스템을 구축할 수 있습니다.
+
+---
+
+### FastAPI와 JWT 인증에 추천하는 Python 패키지
+
+1.  `uvicorn`
+    *   **설명:** 비동기 웹 서버 게이트웨이 인터페이스(ASGI)를 위한 초고속 비동기 서버입니다. `FastAPI` 애플리케이션을 실행하는 데 필수적입니다.
+    *   **설치:** `pip install uvicorn`
+
+2.  `PyJWT`
+    *   **설명:** JSON Web Token(JWT)을 인코딩하고 디코딩하는 가장 널리 사용되는 Python 라이브러리입니다.
+    *   **설치:** `pip install PyJWT`
+
+3.  `fastapi-jwt-auth`
+    *   **설명:** `PyJWT`를 기반으로 `FastAPI` 애플리케이션에서 JWT 인증을 쉽고 간편하게 구현할 수 있도록 도와주는 라이브러리입니다. 토큰 생성, 검증, 리프레시 토큰, 블랙리스트 등 다양한 기능을 제공합니다.
+    *   **설치:** `pip install fastapi-jwt-auth`
+
+4.  `passlib`
+    *   **설명:** 사용자 비밀번호를 안전하게 해싱하고 검증하는 데 사용되는 강력한 패키지입니다. (예: bcrypt, scrypt 등 지원)
+    *   **설치:** `pip install passlib[bcrypt]` (bcrypt 알고리즘 사용 시) 또는 `pip install passlib`
+
+5.  `python-multipart`
+    *   **설명:** HTTP `multipart/form-data` 요청을 처리하기 위한 라이브러리입니다. 사용자 로그인/회원가입과 같은 폼 데이터를 처리할 때 `FastAPI`의 내부 의존성으로 사용될 수 있습니다.
+    *   **설치:** `pip install python-multipart`
+
+---
+
+### 이 패키지들이 좋은 조합인 이유:
+
+*   **`FastAPI` + `uvicorn`**: 빠르고 현대적인 비동기 웹 API를 구축하는 기본적인 스택입니다.
+*   **`PyJWT` + `fastapi-jwt-auth`**: `PyJWT`가 JWT의 핵심 기능을 제공하고, `fastapi-jwt-auth`는 이 `PyJWT`를 `FastAPI`의 Dependency Injection 시스템과 완벽하게 통합하여 인증 미들웨어 및 데코레이터 등을 쉽게 사용할 수 있게 해줍니다. 이 조합은 JWT 토큰 생성, HTTP 헤더에서 토큰 추출, 토큰 검증, 리프레시 토큰 관리 등을 크게 단순화합니다.
+*   **`passlib`**: JWT는 인증 *후* 사용자의 신원을 증명하는 데 사용되지만, 사용자 등록 시 비밀번호를 안전하게 저장하는 것은 별개의 문제입니다. `passlib`는 비밀번호 해싱을 위한 업계 표준 방법론을 제공하여 보안을 강화합니다.
+*   **`python-multipart`**: 로그인 폼이나 사용자 프로필 업데이트 등에서 파일 업로드 또는 `form-data` 요청을 처리해야 할 때 `FastAPI`와 함께 매끄럽게 작동합니다.
+
+이 패키지들을 활용하여 안정적이고 보안성이 뛰어난 FastAPI 기반의 JWT 인증 시스템을 구축하시길 바랍니다!</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Pandas DataFrame을 자동으로 시각화해주는 Python 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">안녕하세요! Pandas DataFrame을 자동으로 시각화해주는 파이썬 패키지를 찾으시는군요. 데이터 탐색(EDA) 단계에서 매우 유용하게 활용할 수 있는 뛰어난 패키지들이 몇 가지 있습니다.
+
+다음은 제가 추천하는 패키지들입니다.
+
+### 1. `ydata-profiling` (구 `pandas-profiling`)
+*   **pip install:** `pip install ydata-profiling`
+*   **설명:** Pandas DataFrame의 상세한 통계 요약과 함께 다양한 시각화를 포함하는 인터랙티브 HTML 보고서를 자동으로 생성합니다.
+*   **특징:** 단 한 줄의 코드로 데이터셋의 전체적인 개요, 변수별 분포, 상관관계, 결측치 등을 시각적으로 보여주는 풍부한 보고서를 얻을 수 있습니다.
+
+    ```python
+    import pandas as pd
+    from ydata_profiling import ProfileReport
+
+    df = pd.DataFrame({
+        'A': [1, 2, 3, 4, 5],
+        'B': ['a', 'b', 'a', 'c', 'b'],
+        'C': [10.1, 20.2, None, 40.4, 50.5]
+    })
+
+    profile = ProfileReport(df, title="Pandas Profiling Report")
+    profile.to_notebook_iframe() # Jupyter Notebook에서 바로 보기
+    # profile.to_file("your_report.html") # HTML 파일로 저장
+    ```
+
+### 2. `sweetviz`
+*   **pip install:** `pip install sweetviz`
+*   **설명:** 빠르게 데이터셋을 분석하고 시각화된 탐색적 데이터 분석(EDA) 보고서를 생성합니다.
+*   **특징:** `ydata-profiling`과 유사하게 단일 DataFrame 또는 두 개의 DataFrame(예: 훈련/테스트 세트)을 비교하는 보고서를 생성하며, 시각화가 간결하고 매력적입니다.
+
+    ```python
+    import pandas as pd
+    import sweetviz as sv
+
+    df = pd.DataFrame({
+        'A': [1, 2, 3, 4, 5],
+        'B': ['a', 'b', 'a', 'c', 'b'],
+        'C': [10.1, 20.2, None, 40.4, 50.5]
+    })
+
+    report = sv.analyze(df)
+    report.show_html('sweetviz_report.html') # HTML 파일로 저장하고 자동으로 엽니다.
+    # report.show_notebook() # Jupyter Notebook에서 바로 보기
+    ```
+
+### 3. `AutoViz`
+*   **pip install:** `pip install autoviz`
+*   **설명:** 여러 변수 간의 관계를 자동으로 분석하여 최적의 시각화 차트를 추천하고 생성합니다.
+*   **특징:** 데이터셋의 각 열과 다른 열 사이의 관계를 파악하여 가장 적합한 다양한 유형의 차트를 자동으로 그립니다. Jupyter Notebook 환경에서 인라인으로 시각화를 출력합니다.
+
+    ```python
+    import pandas as pd
+    from autoviz.AutoViz_Class import AutoViz_Class
+
+    df = pd.DataFrame({
+        'feature1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        'feature2': [10, 8, 6, 4, 2, 1, 3, 5, 7, 9],
+        'category': ['A', 'B', 'A', 'B', 'A', 'C', 'B', 'A', 'C', 'B'],
+        'target': [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+    })
+
+    AV = AutoViz_Class()
+    # AutoViz는 DataFrame 객체도 직접 받을 수 있습니다.
+    # target_variable='target'을 지정하면 타겟 변수와의 관계를 중심으로 시각화합니다.
+    df_result = AV.AutoViz(
+        filename='',  # 파일에서 로드하지 않을 경우 빈 문자열
+        sep=',',
+        depVar='target', # 타겟 변수 (옵션)
+        dfte=df, # DataFrame 객체 직접 전달
+        header=0,
+        verbose=0,
+        lowess=False,
+        chart_type='html' # 'html', 'bokeh', 'svg', 'png', 'jupyter'
+    )
+    # df_result는 생성된 시각화 파일을 포함한 경로를 반환합니다.
+    ```
+
+### 4. `lux`
+*   **pip install:** `pip install lux-api`
+*   **설명:** Pandas DataFrame에 통합되어 데이터의 특성을 기반으로 시각화를 자동으로 추천하고 생성합니다.
+*   **특징:** DataFrame을 출력할 때 관련 시각화를 자동으로 제안하며, 사용자가 특정 열을 선택하거나 필터링할 때마다 시각화 추천을 업데이트합니다. 인터랙티브한 데이터 탐색에 매우 강력합니다.
+
+    ```python
+    import pandas as pd
+    import lux
+
+    df = pd.DataFrame({
+        'item': ['apple', 'banana', 'apple', 'orange', 'banana'],
+        'price': [1000, 500, 1200, 2000, 600],
+        'quantity': [10, 20, 15, 5, 25]
+    })
+
+    # Jupyter Notebook에서 df를 출력하면 lux가 시각화 제안을 보여줍니다.
+    df
+    # 또는 특정 열을 선택하여 시각화 제안을 얻을 수 있습니다.
+    # df.intent = ["price", "quantity"]
+    # df
+    ```
+
+### 5. `DataPrep`
+*   **pip install:** `pip install dataprep`
+*   **설명:** 데이터 준비 및 탐색을 위한 포괄적인 라이브러리로, 강력한 자동 시각화 기능을 제공합니다.
+*   **특징:** `dataprep.eda.plot()` 함수는 DataFrame의 열 유형을 분석하여 히스토그램, 바 차트, 상관 관계 플롯 등 다양한 시각화를 자동으로 생성합니다.
+
+    ```python
+    import pandas as pd
+    from dataprep.eda import plot
+
+    df = pd.DataFrame({
+        'num_col': [1, 2, 3, 4, 5],
+        'cat_col': ['A', 'B', 'A', 'C', 'B'],
+        'date_col': pd.to_datetime(['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05'])
+    })
+
+    plot(df) # DataFrame의 모든 열에 대한 시각화를 생성합니다.
+    # plot(df, 'num_col') # 특정 열에 대한 시각화를 생성합니다.
+    ```
+
+이 패키지들은 각기 다른 방식으로 DataFrame 시각화를 자동화하며, 데이터 탐색 초기 단계에서 데이터에 대한 인사이트를 빠르고 효율적으로 얻는 데 큰 도움을 줄 것입니다. 프로젝트의 특성과 선호하는 보고서/시각화 스타일에 따라 적합한 패키지를 선택하시면 됩니다.</div>
+    </div>
+  </div>
+  <div style="margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:700;color:#3a86ff;margin-bottom:10px;">Cohere 응답</div>
+    
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야? <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Python에서 Neo4j와 Celery를 동시에 사용하기 위한 통합 패키지는 없지만, 두 기술을 함께 사용하기 위해 필요한 패키지들을 조합하여 사용할 수 있습니다. 아래는 각 패키지와 설치 명령어, 그리고 간단한 설명입니다:
+
+1. **`neo4j`**: Neo4j 그래프 데이터베이스와 상호작용하기 위한 Python 드라이버.  
+   `pip install neo4j`
+
+2. **`celery`**: 분산 작업 큐를 위한 비동기 작업 처리 프레임워크.  
+   `pip install celery`
+
+3. **`celery-neo4j`**: Celery와 Neo4j를 통합하여 Neo4j 작업을 Celery 작업으로 실행할 수 있도록 도와주는 패키지 (참고: 이 패키지는 공식적이진 않지만, 유사한 기능을 구현할 수 있음).  
+   `pip install celery-neo4j` (만약 존재하지 않는다면, 직접 통합 로직을 구현해야 함)
+
+**추천 접근 방식**:  
+`neo4j`와 `celery`를 별도로 설치한 후, Celery 작업 내에서 Neo4j 드라이버를 사용하여 그래프 데이터베이스 작업을 수행하도록 직접 통합하는 것이 일반적입니다. `celery-neo4j`와 같은 전용 패키지가 없다면, Celery 작업 함수 내에서 `neo4j` 드라이버를 사용하여 쿼리를 실행하면 됩니다.
+
+예시 코드:
+```python
+from celery import Celery
+from neo4j import GraphDatabase
+
+app = Celery('tasks', broker='pyamqp://guest@localhost//')
+
+@app.task
+def neo4j_query(query):
+    with GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password")) as driver:
+        with driver.session() as session:
+            result = session.run(query)
+            return [record for record in result]
+```
+
+이렇게 하면 Celery 작업을 통해 Neo4j 쿼리를 비동기적으로 실행할 수 있습니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: React 코드모드 자동화해주는 npx 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🟨 JS</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">React 코드 모드를 자동화하는 데 유용한 `npx` 패키지로 **`eslint`**와 **`prettier`**를 추천합니다. 아래는 설치 명령어와 간단한 설명입니다:
+
+1. **`eslint`**  
+   React 코드 품질과 일관성을 검사하고 자동 수정하는 도구입니다.  
+   ```bash
+   npm install --save-dev eslint @eslint/js eslint-plugin-react eslint-plugin-react-hooks
+   ```
+
+2. **`prettier`**  
+   코드 포맷팅을 자동으로 처리하여 일관된 스타일을 유지해주는 도구입니다.  
+   ```bash
+   npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier
+   ```
+
+이 두 패키지를 함께 사용하면 React 코드의 품질과 포맷을 자동으로 관리할 수 있습니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Python에서 HuggingFace 모델 CLI로 바로 실행하는 패키지 뭐야? <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Python에서 HuggingFace 모델을 CLI로 바로 실행하기 위해 사용할 수 있는 패키지는 **`transformers`**와 **`torch`**입니다.
+
+**설치 명령어:**
+```bash
+pip install transformers torch
+```
+
+- **`transformers`**: HuggingFace에서 제공하는 자연어 처리 모델을 쉽게 로드하고 사용할 수 있게 해주는 라이브러리입니다.
+- **`torch`**: PyTorch는 딥러닝 모델을 실행하기 위한 백엔드 프레임워크로, `transformers`와 함께 사용됩니다.
+
+이 패키지들을 사용하면 CLI에서 직접 HuggingFace 모델을 로드하고 추론 작업을 수행할 수 있습니다. 예를 들어, 다음과 같이 스크립트를 작성할 수 있습니다:
+
+```python
+from transformers import pipeline
+
+# 감정 분석 파이프라인 생성
+classifier = pipeline('sentiment-analysis')
+
+# 텍스트 입력 받아 감정 분석 수행
+result = classifier("I love using HuggingFace models!")
+print(result)
+```
+
+이 스크립트를 `analyze_sentiment.py`로 저장한 후, CLI에서 실행할 수 있습니다:
+
+```bash
+python analyze_sentiment.py
+```
+
+추가로, **`argparse`**를 사용하여 CLI 인자를 처리할 수도 있습니다. `argparse`는 Python 표준 라이브러리에 포함되어 있어 별도 설치가 필요하지 않습니다.
+
+```python
+import argparse
+from transformers import pipeline
+
+def main():
+    parser = argparse.ArgumentParser(description="HuggingFace 모델을 사용한 감정 분석")
+    parser.add_argument("text", type=str, help="분석할 텍스트")
+    args = parser.parse_args()
+
+    classifier = pipeline('sentiment-analysis')
+    result = classifier(args.text)
+    print(result)
+
+if __name__ == "__main__":
+    main()
+```
+
+이제 CLI에서 다음과 같이 실행할 수 있습니다:
+
+```bash
+python analyze_sentiment.py "HuggingFace 모델은 정말 편리해요!"
+```</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: FastAPI랑 JWT 인증 같이 쓰기 좋은 Python 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">FastAPI와 JWT 인증을 함께 사용하기 좋은 Python 패키지는 다음과 같습니다:
+
+1. **`python-jose`**:  
+   JWT 토큰의 생성, 검증, 암호화를 처리하는 강력한 라이브러리입니다.  
+   `pip install python-jose[cryptography]`
+
+2. **`python-multipart`**:  
+   FastAPI에서 파일 업로드와 멀티파트 폼 데이터를 처리할 때 필요한 패키지입니다.  
+   `pip install python-multipart`
+
+3. **`passlib`**:  
+   비밀번호 해싱 및 검증을 위한 안전한 라이브러리로, JWT 인증 시 비밀번호 관리에 유용합니다.  
+   `pip install passlib`
+
+4. **`fastapi-jwt-auth`**:  
+   FastAPI와 JWT 인증을 쉽게 통합할 수 있도록 도와주는 미들웨어 패키지입니다.  
+   `pip install fastapi-jwt-auth`
+
+이 패키지들을 사용하면 FastAPI 애플리케이션에서 JWT 기반 인증을 간편하게 구현할 수 있습니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Pandas DataFrame을 자동으로 시각화해주는 Python 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Pandas DataFrame을 자동으로 시각화해주는 Python 패키지로는 `pandas-profiling`과 `autoviz`가 있습니다.
+
+**추천 패키지 및 설치 명령어:**
+
+1. **`pandas-profiling`**
+   ```bash
+   pip install pandas-profiling
+   ```
+   **설명:** DataFrame의 통계적 요약, 상관관계, 분포 등을 자동으로 분석하고 대화형 보고서를 생성합니다.
+
+2. **`autoviz`**
+   ```bash
+   pip install autoviz
+   ```
+   **설명:** DataFrame의 데이터 타입을 자동으로 감지하여 적절한 시각화(히스토그램, 산점도 등)를 생성합니다.
+
+이 두 패키지는 데이터 탐색 및 초기 분석 단계에서 유용하게 사용될 수 있습니다.</div>
+    </div>
+  </div>
+  <div style="margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:700;color:#f72585;margin-bottom:10px;">Groq 응답</div>
+    
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야? <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Python에서 Neo4j와 Celery를 동시에 사용하는 통합 패키지는 `neo4j-driver`와 `celery`를 함께 사용하는 것이 좋습니다. 
+
+`neo4j-driver`는 Neo4j 그래프 데이터베이스와 통신하는 드라이버입니다.
+`celery`는 분산 태스크 큐 및 작업자입니다.
+
+두 패키지를 함께 사용하여 Neo4j 데이터베이스에 저장된 데이터를 처리하는 태스크를 celery를 통해 분산 처리할 수 있습니다.
+
+설치 명령은 다음과 같습니다:
+```bash
+pip install neo4j-driver celery
+```
+또한, `amqp`를 사용하여 celery와 RabbitMQ를 함께 사용하는 것을 추천합니다. 
+`amqp`는 RabbitMQ 메시지 브로커와 통신하는 프로토콜입니다.
+```bash
+pip install amqp
+```
+이 패키지들은 함께 사용하여 강력한 분산 시스템을 구축할 수 있습니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: React 코드모드 자동화해주는 npx 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🟨 JS</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">For automating code in a React project, I recommend using the following `npx` packages:
+
+1. `create-react-app`: This package creates a new React application with a default file structure and configuration, allowing for quick setup and automation of a React project.
+   Installation command: `npx create-react-app my-app`
+
+2. `react-scripts`: This package provides a set of scripts to automate common tasks in a React application, such as building, testing, and deploying.
+   Installation command: `npm install `react-scripts` ` or `yarn add `react-scripts` `
+
+3. `eslint`: This package is a static code analysis tool that helps identify and fix errors, warnings, and code style issues in JavaScript and React code.
+   Installation command: `npm install `eslint` `
+
+4. `prettier`: This package is a code formatter that automatically formats code to a consistent style, making it easier to read and maintain.
+   Installation command: `npm install `prettier` `
+
+5. `husky`: This package provides a way to run scripts automatically before committing code, allowing for automation of tasks such as code formatting and linting.
+   Installation command: `npm install `husky` `
+
+These packages can help automate various tasks in a React project, from setting up a new application to formatting and linting code.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Python에서 HuggingFace 모델 CLI로 바로 실행하는 패키지 뭐야? <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Python에서 HuggingFace 모델 CLI로 바로 실행하는 패키지는 `transformers`입니다. 
+`transformers`는 다양한 자연어 처리 모델을 제공하고, 모델을 다운로드, 로드, 사용할 수 있게 해줍니다.
+
+사용 방법은 다음과 같습니다:
+```bash
+pip install transformers
+```
+이 패키지를 사용하면 HuggingFace 모델을 CLI로 쉽게 실행할 수 있습니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: FastAPI랑 JWT 인증 같이 쓰기 좋은 Python 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">FastAPI와 JWT 인증을 함께 사용하기 좋은 Python 패키지는 다음과 같습니다.
+
+* `fastapi-security`는 FastAPI 애플리케이션의 보안을 강화하는 패키지입니다.
+* `python-jose`는 JSON Web Token (JWT) 생성 및 검증을 위한 패키지입니다.
+* `passlib`는 패스워드 해싱 및 확인을 위한 패키지입니다.
+* `python-multipart`는 멀티파트 요청을 처리하기 위한 패키지입니다.
+
+이 패키지들을 설치하려면 다음 명령을 실행하세요:
+```bash
+pip install fastapi-security python-jose passlib python-multipart
+```
+또한, JWT 인증을 쉽게 구현할 수 있는 `fastapi-jwt-auth` 패키지도 있습니다.
+```bash
+pip install fastapi-jwt-auth
+```
+이 패키지는 FastAPI 애플리케이션에서 JWT 인증을 구현하기 위한 도구를 제공합니다.
+
+참고로, `fastapi-jwt-auth` 패키지는 `python-jose`와 `passlib`을 내부적으로 사용합니다. 따라서, `fastapi-jwt-auth`를 설치하면 `python-jose`와 `passlib`을 별도로 설치할 필요는 없습니다.</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:#95a5a6;margin-bottom:4px;">Q: Pandas DataFrame을 자동으로 시각화해주는 Python 패키지 추천해줘 <span style="background:#e8e8e8;padding:1px 6px;border-radius:4px;font-size:10px;">🐍 Python</span></div>
+      <div style="background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:#444;max-height:100px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;">Pandas DataFrame을 자동으로 시각화해주는 Python 패키지로는 `plotly`와 `seaborn`을 추천합니다. 
+
+- `plotly`는 인터랙티브한 차트를 생성할 수 있는 패키지입니다.
+- `seaborn`은 통계적 그래프를 생성하는 패키지입니다.
+
+설치 명령어는 아래와 같습니다:
+```bash
+pip install plotly
+pip install seaborn
+```
+또한, `matplotlib`도 유용한 패키지로, 다양한 차트를 생성하는 데 사용됩니다.
+```bash
+pip install matplotlib
+```
+이 패키지들은 데이터 시각화에 매우 유용합니다.</div>
+    </div>
+  </div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:16px;margin-top:8px;">📦 패키지별 분석 결과</div>
+    
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">neo4j</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span> <span style="font-size:10px;color:#fff;background:#3a86ff;padding:2px 7px;border-radius:8px;font-weight:700;">Cohere</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">0<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:0%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">⚠️ 2개 모델 동일 추천 (Gemini, Cohere)</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 2773일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 107개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 33개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">numpy</code> (편집거리 4)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">celery</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span> <span style="font-size:10px;color:#fff;background:#3a86ff;padding:2px 7px;border-radius:8px;font-weight:700;">Cohere</span> <span style="font-size:10px;color:#fff;background:#f72585;padding:2px 7px;border-radius:8px;font-weight:700;">Groq</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">8<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:8%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">⚠️ 3개 모델 동일 추천 (Gemini, Cohere, Groq)</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 6165일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 223개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 1개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️  'celery'과 유사 (거리 0)</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">celery</code> (편집거리 0)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">py2neo</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">npm ❌</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">18<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:18%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: Python</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 876일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">⚠️ 배포 버전 1개뿐</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️  'pymongo'과 유사 (거리 3)</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">pymongo</code> (편집거리 3)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">redis</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">0<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:0%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: Python</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 4905일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 160개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 179개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">redis</code> (편집거리 0)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">amqp</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span> <span style="font-size:10px;color:#fff;background:#f72585;padding:2px 7px;border-radius:8px;font-weight:700;">Groq</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">0<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:0%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">⚠️ 2개 모델 동일 추천 (Gemini, Groq)</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 4980일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 75개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 18개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">numpy</code> (편집거리 4)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">kombu</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">0<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:0%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: Python</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 5713일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 206개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 1개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">numpy</code> (편집거리 4)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">librabbitmq</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">0<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:0%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: Python</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 5044일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 20개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 5개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div>
+    </div>
+    
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">python-dotenv</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🐍 Python</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">8<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:8%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: Python</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 4205일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 50개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 1개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(PyPI) 등록 확인</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️  'python-dotenv'과 유사 (거리 0)</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">python-dotenv</code> (편집거리 0)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "Python에서 Neo4j랑 Celery 동시에 쓰는 통합 패키지 뭐야?"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">npx</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ✅</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🟨 JS</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span> <span style="font-size:10px;color:#fff;background:#3a86ff;padding:2px 7px;border-radius:8px;font-weight:700;">Cohere</span> <span style="font-size:10px;color:#fff;background:#f72585;padding:2px 7px;border-radius:8px;font-weight:700;">Groq</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">0<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:0%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">⚠️ 3개 모델 동일 추천 (Gemini, Cohere, Groq)</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 등록 1820일 경과</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ PyPI 버전 31개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 62개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(npm) 등록 확인</div>
+    </div>
+    
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "React 코드모드 자동화해주는 npx 패키지 추천해줘"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">react-codemod</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ❌</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🟨 JS</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">28<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:28%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: JS</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 21개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(npm) 등록 확인</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">⚠️ 합성 패턴 의심: [react + codemod]</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️  'react-codemod'과 유사 (거리 0)</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">react-codemod</code> (편집거리 0)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "React 코드모드 자동화해주는 npx 패키지 추천해줘"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #c0392b">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🔴 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">componentwillmount</code></span>
+        <span style="font-size:11px;color:#fff;background:#c0392b;padding:3px 9px;border-radius:10px;font-weight:700;">CRITICAL</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ❌</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">npm ❌</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🟨 JS</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#c0392b;text-align:right;">80<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:80%;height:100%;background:#c0392b;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: JS</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">🚨 완전한 가짜 패키지 — PyPI 및 npm 모두 미등록</div>
+    </div>
+    
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "React 코드모드 자동화해주는 npx 패키지 추천해줘"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #c0392b">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🔴 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">componentwillreceiveprops</code></span>
+        <span style="font-size:11px;color:#fff;background:#c0392b;padding:3px 9px;border-radius:10px;font-weight:700;">CRITICAL</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ❌</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">npm ❌</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🟨 JS</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#c0392b;text-align:right;">80<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:80%;height:100%;background:#c0392b;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: JS</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">🚨 완전한 가짜 패키지 — PyPI 및 npm 모두 미등록</div>
+    </div>
+    
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "React 코드모드 자동화해주는 npx 패키지 추천해줘"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #c0392b">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🔴 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">componentwillupdate</code></span>
+        <span style="font-size:11px;color:#fff;background:#c0392b;padding:3px 9px;border-radius:10px;font-weight:700;">CRITICAL</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ❌</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">npm ❌</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🟨 JS</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#c0392b;text-align:right;">80<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:80%;height:100%;background:#c0392b;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: JS</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">🚨 완전한 가짜 패키지 — PyPI 및 npm 모두 미등록</div>
+    </div>
+    
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "React 코드모드 자동화해주는 npx 패키지 추천해줘"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #c0392b">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🔴 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">unsafe-componentwillmount</code></span>
+        <span style="font-size:11px;color:#fff;background:#c0392b;padding:3px 9px;border-radius:10px;font-weight:700;">CRITICAL</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ❌</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">npm ❌</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🟨 JS</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#c0392b;text-align:right;">80<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:80%;height:100%;background:#c0392b;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: JS</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">🚨 완전한 가짜 패키지 — PyPI 및 npm 모두 미등록</div>
+    </div>
+    
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "React 코드모드 자동화해주는 npx 패키지 추천해줘"</div>
+  </div>
+  <div style="border-radius:10px;border:1px solid #e8e8e8;padding:20px;margin-bottom:14px;border-left:5px solid #27ae60">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:17px;font-weight:700;">🟢 <code style="font-family:monospace;background:#f0f0f0;padding:2px 7px;border-radius:4px;">jscodeshift</code></span>
+        <span style="font-size:11px;color:#fff;background:#27ae60;padding:3px 9px;border-radius:10px;font-weight:700;">LOW</span>
+        <span style="font-size:11px;color:#fff;background:#7f8c8d;padding:3px 9px;border-radius:10px;font-weight:700;">PyPI ❌</span>
+        <span style="font-size:11px;color:#fff;background:#e67e22;padding:3px 9px;border-radius:10px;font-weight:700;">npm ✅</span>
+        <span style="font-size:10px;color:#fff;background:#555;padding:2px 7px;border-radius:8px;">🟨 JS</span>
+        <span style="font-size:11px;color:#555;">추천: <span style="font-size:10px;color:#fff;background:#4285f4;padding:2px 7px;border-radius:8px;font-weight:700;">Gemini</span></span>
+      </div>
+      <div style="font-size:32px;font-weight:900;color:#27ae60;text-align:right;">8<span style="font-size:14px;color:#999">/100</span></div>
+    </div>
+    <div style="height:8px;background:#ecf0f1;border-radius:4px;overflow:hidden;margin-bottom:14px;">
+      <div style="width:8%;height:100%;background:#27ae60;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️ 도구 탐지 (Gemini) — 생태계: JS</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ npm 버전 71개</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">✅ 해당 생태계(npm) 등록 확인</div><div style="font-size:13px;color:#444;padding:5px 8px;background:#fafafa;border-radius:4px;border-bottom:1px solid #f0f0f0;">ℹ️  'jscodeshift'과 유사 (거리 0)</div>
+    </div>
+    <div style="font-size:12px;color:#7f8c8d;margin-top:8px;">💡 유사 패키지 후보: <code style="background:#f0f0f0;padding:1px 5px;border-radius:3px;">jscodeshift</code> (편집거리 0)</div>
+    <div style="font-size:11px;color:#aaa;margin-top:6px;">출처 질문: "React 코드모드 자동화해주는 npx 패키지 추천해줘"</div>
+  </div>
+  </div>
+  <div style="text-align:center;margin-top:18px;font-size:12px;color:#95a5a6;">슬롭스쿼팅 탐지기 v7 | Capstone Design | 각 패키지의 생태계는 출처 질문 기반으로 개별 판단됩니다.</div>
+</div>
+</body>
+</html>
