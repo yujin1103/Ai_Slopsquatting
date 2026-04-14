@@ -338,7 +338,12 @@ function scanResponseText() {
     // 2. table td > strong 태그 (Claude 패키지 소개 표)
     const tablePackages = extractTablePackages(el);
 
-    const allPackages = [...new Set([...pipPackages, ...tablePackages])]
+    // 3. 자연어 감지 — 백틱, import 패턴, 인기 패키지 매칭
+    const nlpPackages = typeof extractPackagesFromNaturalText === "function"
+      ? extractPackagesFromNaturalText(text)
+      : [];
+
+    const allPackages = [...new Set([...pipPackages, ...tablePackages, ...nlpPackages])]
       .filter(p => ![...processedKeys].some(k => k.includes(p)));
 
     if (!allPackages.length) return;

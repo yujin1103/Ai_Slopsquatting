@@ -115,32 +115,38 @@ const observer = new MutationObserver(() => {
 const processedTextKeys = new Set();
 
 function scanResponseText() {
-  // Gemini 응답 컨테이너 — message-content 가 실제 DOM 셀렉터
-  // 코드블록이 있는 message-content는 이미 코드블록 분석에서 처리됨 → 스킵
   document.querySelectorAll("message-content").forEach(el => {
     const text = el.innerText || "";
     if (text.length < 20) return;
 
-    // pip/npm install 패턴이 없으면 스킵
-    if (!/pip install|npm install|npm i /i.test(text)) return;
-
     const key = `text::${text.length}::${text.slice(0, 60)}`;
     if (processedTextKeys.has(key)) return;
 
-    const packages = extractPackagesFromText(text);
-    if (!packages.length) return;
+    // 1단계: pip/npm install 패턴 (고신뢰)
+    const installPackages = extractPackagesFromText(text);
 
-    // 코드블록에서 이미 분석된 패키지는 제외 (중복 방지)
-    const newPackages = packages.filter(p => {
+    // 2단계: 자연어 감지 — 백틱, import 패턴, 인기 패키지 매칭
+    const nlpPackages = typeof extractPackagesFromNaturalText === "function"
+      ? extractPackagesFromNaturalText(text)
+      : [];
+
+    // 합집합 (중복 제거)
+    const allPackages = [...new Set([...installPackages, ...nlpPackages])];
+
+    // 코드블록에서 이미 분석된 패키지 제외
+    const newPackages = allPackages.filter(p => {
       return ![...processedKeys].some(k => k.includes(p));
     });
     if (!newPackages.length) return;
 
+    // DOM에 이미 텍스트 패널 있으면 스킵
+    if (el.parentElement?.querySelector("[data-slop-text-panel]")) return;
+
     processedTextKeys.add(key);
-    console.log(`[Slop Detector] 텍스트 추가 패키지 감지:`, newPackages);
+    console.log(`[Slop Detector] Gemini 패키지 감지:`, newPackages);
 
     analyzePackagesFromText(newPackages, (newEl) => {
-      // 코드블록 패널 다음에 삽입 (있으면), 없으면 컨테이너 다음에 삽입
+      newEl.setAttribute("data-slop-text-panel", "1");
       const existingPanel = el.nextElementSibling?.hasAttribute("data-slop-panel")
         ? el.nextElementSibling : null;
       const insertTarget = existingPanel || el;

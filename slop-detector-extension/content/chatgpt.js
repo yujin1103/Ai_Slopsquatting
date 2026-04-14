@@ -149,8 +149,13 @@ function scanResponseText() {
     // span.whitespace-normal 패턴 추출 (ChatGPT 자연어 언급)
     const spanPackages = extractSpanPackages(el);
 
+    // 자연어 감지 — 백틱, import 패턴, 인기 패키지 매칭
+    const nlpPackages = typeof extractPackagesFromNaturalText === "function"
+      ? extractPackagesFromNaturalText(text)
+      : [];
+
     // 합치고 코드블록에서 이미 분석된 것 제외
-    const allPackages = [...new Set([...pipPackages, ...spanPackages])]
+    const allPackages = [...new Set([...pipPackages, ...spanPackages, ...nlpPackages])]
       .filter(p => ![...processedKeys].some(k => k.includes(p)));
 
     if (!allPackages.length) return;

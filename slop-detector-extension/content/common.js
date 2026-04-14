@@ -67,6 +67,103 @@ function extractPackagesFromText(text) {
   return [...packages];
 }
 
+// ── 자연어 텍스트에서 패키지명 추출 (백틱 + import + 인기 패키지 매칭) ─────────
+// pip install 패턴이 없는 텍스트 응답에서도 패키지명을 감지
+const POPULAR_PACKAGES = new Set([
+  // Python
+  "numpy","pandas","flask","django","fastapi","requests","scipy","matplotlib",
+  "tensorflow","pytorch","torch","keras","scikit-learn","sklearn","opencv-python",
+  "pillow","beautifulsoup4","bs4","selenium","scrapy","celery","redis","sqlalchemy",
+  "alembic","pydantic","httpx","aiohttp","uvicorn","gunicorn","pytest","black",
+  "mypy","ruff","poetry","pipenv","transformers","datasets","langchain","openai",
+  "anthropic","gradio","streamlit","plotly","seaborn","bokeh","dash","sympy",
+  "networkx","nltk","spacy","gensim","xgboost","lightgbm","catboost","optuna",
+  "ray","dask","polars","pyarrow","fastparquet","duckdb","pymongo","psycopg2",
+  "mysqlclient","peewee","tortoise-orm","motor","mongoengine","marshmallow",
+  "pyyaml","toml","dotenv","python-dotenv","click","typer","rich","tqdm",
+  "loguru","sentry-sdk","cryptography","bcrypt","jwt","pyjwt","paramiko",
+  "fabric","boto3","google-cloud-storage","azure-storage-blob",
+  // npm
+  "express","react","next","vue","nuxt","angular","svelte","axios","lodash",
+  "moment","dayjs","date-fns","cheerio","puppeteer","playwright","jest","mocha",
+  "chai","vitest","webpack","vite","rollup","esbuild","tailwindcss","prisma",
+  "sequelize","mongoose","typeorm","knex","socket.io","ws","cors","helmet",
+  "dotenv","jsonwebtoken","bcryptjs","passport","multer","sharp","nodemailer",
+  "bull","ioredis","pg","mysql2","mongodb","zod","yup","joi",
+]);
+
+// 오탐 방지: 일반 영어 단어/프로그래밍 키워드
+const NLP_STOPWORDS = new Set([
+  "the","and","for","with","that","this","from","can","you","use","your",
+  "will","not","are","have","more","any","all","it","is","in","or","as",
+  "an","to","a","be","has","was","were","been","being","do","does","did",
+  "but","if","then","else","when","where","how","what","which","who",
+  "pip","npm","install","python","node","import","export","require","module",
+  "function","class","def","return","const","let","var","true","false",
+  "none","null","self","async","await","try","catch","finally","throw",
+  "new","delete","typeof","instanceof","void","yield","super","extends",
+  "implements","interface","enum","type","public","private","protected",
+  "static","final","abstract","package","default","case","switch","break",
+  "continue","while","for","do","if","else","elif","except","raise",
+  "pass","lambda","with","as","global","nonlocal","assert","yield",
+  "string","number","boolean","object","array","list","dict","set","tuple",
+  "int","float","double","long","short","byte","char","bool","str",
+  "print","console","log","error","warning","debug","info",
+  "http","https","api","url","uri","html","css","json","xml","sql",
+  "get","post","put","delete","patch","head","options",
+  "app","server","client","database","table","column","row","key","value",
+  "file","path","dir","folder","name","index","main","test","config",
+  "data","model","view","controller","service","repository","handler",
+  "input","output","result","response","request","query","param","body",
+  "header","cookie","session","token","auth","user","admin","role",
+  "code","script","style","image","video","audio","font","icon",
+  "hello","world","example","sample","demo","foo","bar","baz",
+]);
+
+function extractPackagesFromNaturalText(text) {
+  const found = new Set();
+
+  // 1) 백틱 인라인 코드: `package-name`
+  const backtickRe = /`([a-zA-Z][a-zA-Z0-9_\-\.]{1,40})`/g;
+  let m;
+  while ((m = backtickRe.exec(text)) !== null) {
+    const name = m[1].toLowerCase().trim();
+    if (_isLikelyPackage(name)) found.add(name);
+  }
+
+  // 2) import 패턴 (코드블록 밖 텍스트에서도 감지)
+  const importRe = /(?:^|\n)\s*(?:import\s+([\w\-]+)|from\s+([\w\-]+)\s+import)/gm;
+  while ((m = importRe.exec(text)) !== null) {
+    const name = (m[1] || m[2]).toLowerCase().trim();
+    if (_isLikelyPackage(name)) found.add(name);
+  }
+
+  // 3) 인기 패키지 사전 매칭 (단어 경계 기반)
+  for (const pkg of POPULAR_PACKAGES) {
+    // 패키지명이 2글자 이하면 오탐 위험 → 스킵
+    if (pkg.length <= 2) continue;
+    // 단어 경계로 매칭 (대소문자 무시)
+    const re = new RegExp(`(?:^|[\\s\`"'(\\[,;:])${escapeRegex(pkg)}(?:$|[\\s\`"')\\],;:.!?])`, "im");
+    if (re.test(text)) found.add(pkg);
+  }
+
+  return [...found];
+}
+
+function _isLikelyPackage(name) {
+  if (name.length < 2 || name.length > 40) return false;
+  if (NLP_STOPWORDS.has(name)) return false;
+  if (/^\d/.test(name)) return false;
+  if (/\.(py|js|ts|html|css|json|md|txt|yaml|yml)$/i.test(name)) return false;
+  // PascalCase 클래스명 제외: MyClass, ImageData
+  if (/^[A-Z][a-z]+([A-Z][a-z]+)+$/.test(name)) return false;
+  return true;
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 // ── 패널 생성 ─────────────────────────────────────────────────────────────────
 function buildPanel(results) {
   const dangerous = results.filter(r => r.level !== "LOW");
