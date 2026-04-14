@@ -263,33 +263,41 @@ async def _analyse_package(
         # Layer 2 (source): 등록됨 → 소스 분석이 핵심, 메타데이터는 보조
         risk_layer = "source"
 
-        # 메타데이터 보정 (각 속성은 한 번만 평가)
-        meta_adjust = 0
+        # ── 신뢰도 할인 계수 (곱셈, 중첩 적용) ────────────────────────
+        trust_factor = 1.0
 
-        # 등록 기간: 짧으면 가산, 길면 감산
+        # 등록 기간
         if reg_days is not None:
-            if reg_days <= 30:
-                meta_adjust += 10
+            if reg_days > 2000:
+                trust_factor *= 0.2
             elif reg_days > 1000:
-                meta_adjust -= 10
+                trust_factor *= 0.3
             elif reg_days > 365:
-                meta_adjust -= 5
+                trust_factor *= 0.5
 
-        # 버전 수: 적으면 가산, 많으면 감산
+        # 버전 수
         if version_count is not None:
-            if version_count <= 1:
-                meta_adjust += 5
-            elif version_count >= 50:
-                meta_adjust -= 10
+            if version_count >= 50:
+                trust_factor *= 0.7
             elif version_count >= 10:
-                meta_adjust -= 5
+                trust_factor *= 0.9
 
-        # 유사 이름: 독립 시그널 (위 속성과 중복 없음)
+        # 인기 패키지 목록 포함 여부
+        if pkg in POPULAR_PACKAGES_SET:
+            trust_factor *= 0.5
+
+        discounted_source = int(source_score_raw * trust_factor)
+
+        # ── 의심 가산 (독립 시그널, 할인과 별도) ──────────────────────
+        suspicion = 0
+        if reg_days is not None and reg_days <= 30:
+            suspicion += 10
         if has_similar:
-            meta_adjust += 10
+            suspicion += 10
+        if version_count is not None and version_count <= 1:
+            suspicion += 5
 
-        final_score = max(source_score_raw + meta_adjust, 0)
-        final_score = min(final_score, 100)
+        final_score = min(discounted_source + suspicion, 100)
 
     if final_score >= 80:
         level = "CRITICAL"
