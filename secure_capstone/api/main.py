@@ -262,6 +262,8 @@ async def _analyse_package(
     else:
         # Layer 2 (source): 등록됨 → 소스 분석이 핵심, 메타데이터는 보조
         risk_layer = "source"
+
+        # 의심 가산 (메타데이터가 수상할 때)
         meta_suspicion = 0
         if reg_days is not None and reg_days <= 30:
             meta_suspicion += 10
@@ -269,7 +271,20 @@ async def _analyse_package(
             meta_suspicion += 10
         if version_count == 1:
             meta_suspicion += 5
-        final_score = min(source_score_raw + meta_suspicion, 100)
+
+        # 신뢰 감산 (메타데이터가 안전할 때 → 소스 점수 할인)
+        meta_trust = 0
+        if reg_days is not None and reg_days > 1000:
+            meta_trust += 10
+        elif reg_days is not None and reg_days > 365:
+            meta_trust += 5
+        if version_count is not None and version_count >= 50:
+            meta_trust += 10
+        elif version_count is not None and version_count >= 10:
+            meta_trust += 5
+
+        final_score = max(source_score_raw + meta_suspicion - meta_trust, 0)
+        final_score = min(final_score, 100)
 
     if final_score >= 80:
         level = "CRITICAL"
