@@ -169,8 +169,8 @@ async def _analyse_package(
             elif version_count > 1:
                 signals.append(f"✅ 버전 {version_count}개 (활성 패키지)")
         else:
-            score += 55
-            signals.append("🚨 PyPI 미등록 — 존재하지 않는 패키지")
+            score += 70
+            signals.append("🚨 PyPI 미등록 — 존재하지 않는 패키지 (소스 분석 불가)")
     except Exception as e:
         signals.append(f"❓ PyPI 조회 오류: {str(e)[:50]}")
 
@@ -187,7 +187,8 @@ async def _analyse_package(
                 score += 15
                 signals.append("⚠️ npm에는 존재 → 생태계 혼동 패턴")
             else:
-                signals.append("🚨 npm에도 미등록")
+                score += 10
+                signals.append("🚨 npm에도 미등록 — 어떤 레지스트리에도 없음")
         except Exception:
             pass
 
