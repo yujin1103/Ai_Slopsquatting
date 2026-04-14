@@ -52,11 +52,14 @@ function insertAfterCode(codeEl, newEl) {
 
 // ── 중복 방지 ─────────────────────────────────────────────────────────────────
 let processedKeys = new Set();
-const processedArtifacts = new Set();
 
 function getKey(text) {
   return `${text.length}::${text.slice(0, 60)}::${text.slice(-60)}`;
 }
+
+// 아티팩트 분석 상태: 스트리밍 중 debounce + 카드 잠금
+let _artifactTimer = null;
+let _pendingCard = null;
 
 // ── 케이스 1: 코드블록 스캔 ──────────────────────────────────────────────────
 function scanCodeBlocks() {
@@ -105,24 +108,46 @@ function scanArtifacts() {
     || /require\(|"dependencies"/.test(code);
   if (!hasImport) return;
 
-  const key = `artifact::${getKey(code)}`;
-  if (processedArtifacts.has(key)) return;
-  processedArtifacts.add(key);
+  // ── 스트리밍 중 debounce ────────────────────────────────────────
+  // 이미 타이머가 돌고 있으면 (같은 아티팩트의 스트리밍 중) 타이머만 리셋
+  if (_artifactTimer) {
+    clearTimeout(_artifactTimer);
+    _artifactTimer = setTimeout(() => _analyzeStableArtifact(), 2000);
+    return;
+  }
 
-  const filename = guessFilenameFromCode(code);
-  console.log(`[Slop Detector] 아티팩트 감지: ${filename} (${code.length}자)`);
-
-  // 아직 분석 안 된 첫 번째 카드를 미리 예약 (로딩/패널 모두 같은 카드에)
+  // ── 새 아티팩트 감지: 카드를 즉시 잠금 ─────────────────────────
   const cards = [...document.querySelectorAll("[class*='artifact-block']")];
   const targetCard = cards.find(c => !c.hasAttribute("data-slop-analyzed"));
-  if (!targetCard) return; // 모든 카드가 이미 분석됨
+  if (!targetCard) return;
 
-  targetCard.setAttribute("data-slop-analyzed", "1"); // 예약 마킹
+  targetCard.setAttribute("data-slop-analyzed", "1");
+  _pendingCard = targetCard;
 
-  const insertFn = (newEl) => {
+  // 스트리밍이 안정될 때까지 대기 (2초간 변화 없으면 분석 실행)
+  _artifactTimer = setTimeout(() => _analyzeStableArtifact(), 2000);
+}
+
+function _analyzeStableArtifact() {
+  _artifactTimer = null;
+  const card = _pendingCard;
+  _pendingCard = null;
+  if (!card) return;
+
+  // 안정화된 최종 코드 다시 추출
+  const code = extractArtifactCode();
+  if (!code || code.length < 80) {
+    card.removeAttribute("data-slop-analyzed");
+    return;
+  }
+
+  const filename = guessFilenameFromCode(code);
+  console.log(`[Slop Detector] 아티팩트 분석 시작: ${filename} (${code.length}자)`);
+
+  analyzeAndRender(code, filename, (newEl) => {
     newEl.setAttribute("data-slop-artifact-panel", "1");
     newEl.style.margin = "4px 0 0";
-    const rowContainer = targetCard
+    const rowContainer = card
       ?.parentElement?.parentElement?.parentElement?.parentElement;
     if (rowContainer) {
       // 기존 패널 제거 후 삽입
@@ -138,9 +163,7 @@ function scanArtifacts() {
       } catch {}
     }
     return false;
-  };
-
-  analyzeAndRender(code, filename, insertFn);
+  });
 }
 
 // ── MutationObserver ──────────────────────────────────────────────────────────
@@ -170,9 +193,12 @@ window.addEventListener("message", (event) => {
 
   watchNavigation(() => {
     processedKeys = new Set();
-    processedArtifacts.clear();
+    clearTimeout(_artifactTimer);
+    _artifactTimer = null;
+    _pendingCard = null;
     // 아티팩트 카드 분석 마킹 초기화
     document.querySelectorAll("[data-slop-analyzed]").forEach(el => el.removeAttribute("data-slop-analyzed"));
+    document.querySelectorAll("[data-slop-artifact-panel]").forEach(el => el.remove());
     setTimeout(() => { scanCodeBlocks(); scanArtifacts(); }, 1000);
   });
 
