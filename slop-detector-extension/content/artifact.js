@@ -13,36 +13,73 @@ function guessFilenameFromCode(code) {
 }
 
 function extractCode() {
-  // Claude 아티팩트 뷰어: token 요소의 3단계 위 div가 코드 전체를 담음
-  // div.min-w-0.max-w-full → innerText로 줄바꿈 보존
+  // 전략 1: token 요소 → 상위 코드 컨테이너
   const tokenEl = document.querySelector("[class*='token']");
   if (tokenEl) {
     let el = tokenEl;
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
       el = el.parentElement;
       if (!el) break;
       const cls = el.className || "";
       if (cls.includes("min-w-0") && cls.includes("max-w-full")) {
-        // 줄 번호 제거: 각 줄이 "숫자\n코드" 형태로 되어 있음
         const raw = el.innerText || "";
         const lines = raw.split("\n");
-        const code = lines
-          .filter((_, i) => i % 2 === 1)  // 홀수 인덱스 = 실제 코드 줄
-          .join("\n");
-        if (code.length > 30) return code;
+        const isNumbered = /^\d+$/.test(lines[0]?.trim());
+        const code = isNumbered
+          ? lines.filter((_, i) => i % 2 === 1).join("\n")
+          : raw;
+        if (code.length > 30) {
+          console.log(`[Slop Detector] 코드 추출 성공 (token→parent, ${code.length}자)`);
+          return code;
+        }
       }
     }
   }
 
-  // 폴백: 기존 셀렉터
-  const selectors = [".view-lines", ".CodeMirror-code", "pre code", "pre"];
+  // 전략 2: 다양한 코드 뷰어 셀렉터
+  const selectors = [
+    ".view-lines",
+    ".CodeMirror-code",
+    "pre code",
+    "pre",
+    "[class*='code-block']",
+    "[class*='monaco']",
+    "[class*='cm-content']",
+    "[class*='editor']",
+    "[data-language]",
+    "code",
+  ];
   for (const sel of selectors) {
     const el = document.querySelector(sel);
     if (el) {
       const text = (el.innerText || el.textContent || "").trim();
-      if (text.length > 30) return text;
+      if (text.length > 30) {
+        console.log(`[Slop Detector] 코드 추출 성공 (${sel}, ${text.length}자)`);
+        return text;
+      }
     }
   }
+
+  // 전략 3: body에서 코드 패턴 직접 탐색 (최후 수단)
+  const bodyText = (document.body?.innerText || "").trim();
+  if (bodyText.length > 80) {
+    const hasCode = /^\s*(import |from .+ import|def |class |require\(|const |function )/m.test(bodyText);
+    if (hasCode) {
+      console.log(`[Slop Detector] 코드 추출 성공 (body 전체, ${bodyText.length}자)`);
+      return bodyText;
+    }
+  }
+
+  // 디버그: DOM 구조 출력
+  console.log(`[Slop Detector] 코드 추출 실패. DOM 디버그:`);
+  console.log(`  token 요소: ${!!tokenEl}`);
+  console.log(`  body 길이: ${bodyText.length}`);
+  console.log(`  body 미리보기: ${bodyText.slice(0, 200)}`);
+  const allEls = document.querySelectorAll("*");
+  const classes = new Set();
+  allEls.forEach(el => (el.className || "").split(/\s+/).forEach(c => { if (c) classes.add(c); }));
+  console.log(`  고유 클래스 (${classes.size}개):`, [...classes].slice(0, 30).join(", "));
+
   return null;
 }
 
@@ -69,11 +106,14 @@ async function runAnalysis() {
 
     console.log(`[Slop Detector] 아티팩트 완료:`, result.results.map(r => `${r.package}(${r.level})`));
 
-    // 결과를 부모 페이지로 전송
+    // 결과를 부모 페이지로 전송 (claude.ai 또는 어떤 부모든)
+    const parentOrigin = document.referrer
+      ? new URL(document.referrer).origin
+      : "https://claude.ai";
     window.parent.postMessage({
       type: "SLOP_ARTIFACT_RESULT",
       results: result.results,
-    }, "https://claude.ai");
+    }, parentOrigin);
 
   } catch (err) {
     console.error("[Slop Detector] 아티팩트 오류:", err.message);

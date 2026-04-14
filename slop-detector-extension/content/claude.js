@@ -79,25 +79,48 @@ function scanCodeBlocks() {
 
 // ── 케이스 2: 아티팩트 코드 추출 ─────────────────────────────────────────────
 function extractArtifactCode() {
-  const tokenEl = document.querySelector("[class*='token']");
-  if (!tokenEl) return null;
+  // 토큰 요소가 있는 모든 코드 컨테이너를 찾음
+  const tokenEls = document.querySelectorAll("[class*='token']");
+  if (!tokenEls.length) return null;
 
-  let el = tokenEl;
-  for (let i = 0; i < 8; i++) {
-    el = el.parentElement;
-    if (!el) break;
-    const cls = el.className || "";
-    if (cls.includes("min-w-0") && cls.includes("max-w-full")) {
-      const raw = el.innerText || "";
-      const lines = raw.split("\n");
-      // 줄번호 있는 구조: "1\nimport numpy\n2\nimport pandas" → 홀수 인덱스가 코드
-      const isNumbered = /^\d+$/.test(lines[0]?.trim());
-      return isNumbered
-        ? lines.filter((_, i) => i % 2 === 1).join("\n")
-        : raw;
+  // 토큰에서 상위 코드 컨테이너를 찾는 함수
+  function findCodeContainer(tokenEl) {
+    let el = tokenEl;
+    let bestContainer = null;
+    for (let i = 0; i < 12; i++) {
+      el = el.parentElement;
+      if (!el || el === document.body) break;
+
+      const tokenCount = el.querySelectorAll("[class*='token']").length;
+      const text = el.innerText || "";
+
+      // 토큰이 5개 이상이고 텍스트가 충분한 컨테이너
+      if (tokenCount >= 5 && text.length > 80) {
+        bestContainer = el;
+        // 더 위로 올라가면 전체 페이지를 잡을 수 있으므로
+        // 토큰 밀도가 급격히 떨어지면 멈춤
+        const parentTokens = el.parentElement?.querySelectorAll("[class*='token']").length || 0;
+        if (parentTokens > tokenCount * 3) break;
+      }
     }
+    return bestContainer;
   }
-  return null;
+
+  // 첫 번째 토큰에서 코드 컨테이너 탐색
+  const container = findCodeContainer(tokenEls[0]);
+  if (!container) return null;
+
+  const raw = container.innerText || "";
+  if (raw.length < 80) return null;
+
+  // 줄번호 제거: "1\nimport flask\n2\nfrom flask..." 형태
+  const lines = raw.split("\n");
+  const isNumbered = /^\d+$/.test(lines[0]?.trim());
+  const code = isNumbered
+    ? lines.filter((_, i) => i % 2 === 1).join("\n")
+    : raw;
+
+  return code.length > 30 ? code : null;
 }
 
 function scanArtifacts() {
@@ -177,12 +200,62 @@ const observer = new MutationObserver(() => {
 });
 
 // ── 아티팩트 결과 수신 (postMessage from a.claude.ai iframe) ─────────────────
+const _processedArtifactMessages = new Set();
+
 window.addEventListener("message", (event) => {
-  if (event.origin !== "https://a.claude.ai") return;
+  const allowed = ["https://a.claude.ai", "https://www.claudeusercontent.com"];
+  if (!allowed.some(o => event.origin === o || event.origin.endsWith(".claudeusercontent.com"))) return;
   if (event.data?.type !== "SLOP_ARTIFACT_RESULT") return;
   const results = event.data.results;
   if (!results?.length) return;
-  console.log(`[Slop Detector] postMessage 수신:`, results.map(r => `${r.package}(${r.level})`));
+
+  // 중복 방지: 패키지 조합 기반
+  const msgKey = results.map(r => r.package).sort().join(",");
+  if (_processedArtifactMessages.has(msgKey)) return;
+  _processedArtifactMessages.add(msgKey);
+
+  console.log(`[Slop Detector] 아티팩트 iframe 결과 수신:`, results.map(r => `${r.package}(${r.level})`));
+
+  const panel = buildPanel(results);
+  panel.setAttribute("data-slop-artifact-panel", "1");
+  panel.style.margin = "4px 0 0";
+
+  // 전략 1: artifact-block 카드 찾기
+  const cards = [...document.querySelectorAll("[class*='artifact-block']")];
+  const targetCard = cards.find(c => !c.hasAttribute("data-slop-analyzed"));
+
+  if (targetCard) {
+    targetCard.setAttribute("data-slop-analyzed", "1");
+    const rowContainer = targetCard
+      ?.parentElement?.parentElement?.parentElement?.parentElement;
+    if (rowContainer) {
+      let next = rowContainer.nextElementSibling;
+      while (next?.hasAttribute("data-slop-artifact-panel")) {
+        const toRemove = next;
+        next = next.nextElementSibling;
+        toRemove.remove();
+      }
+      try { rowContainer.insertAdjacentElement("afterend", panel); return; } catch {}
+    }
+  }
+
+  // 전략 2: 대화 내 마지막 응답 블록 뒤에 삽입
+  const responseBlocks = document.querySelectorAll(
+    ".font-claude-message, [class*='prose'], div[data-is-streaming='false']"
+  );
+  const lastBlock = responseBlocks[responseBlocks.length - 1];
+  if (lastBlock) {
+    // 기존 아티팩트 패널이 있으면 제거
+    const existing = lastBlock.parentElement?.querySelector("[data-slop-artifact-panel]");
+    if (existing) existing.remove();
+    try { lastBlock.insertAdjacentElement("afterend", panel); return; } catch {}
+  }
+
+  // 전략 3: 대화 컨테이너 끝에 추가
+  const chatContainer = document.querySelector("[class*='conversation'], main, [role='main']");
+  if (chatContainer) {
+    try { chatContainer.appendChild(panel); } catch {}
+  }
 });
 
 // ── 시작 ──────────────────────────────────────────────────────────────────────
@@ -196,6 +269,7 @@ window.addEventListener("message", (event) => {
     clearTimeout(_artifactTimer);
     _artifactTimer = null;
     _pendingCard = null;
+    _processedArtifactMessages.clear();
     // 아티팩트 카드 분석 마킹 초기화
     document.querySelectorAll("[data-slop-analyzed]").forEach(el => el.removeAttribute("data-slop-analyzed"));
     document.querySelectorAll("[data-slop-artifact-panel]").forEach(el => el.remove());
