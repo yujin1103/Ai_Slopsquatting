@@ -79,10 +79,8 @@ function scanCodeBlocks() {
     const hasImport = /^\s*(import |from .+ import)/m.test(text)
       || /require\(|"dependencies"/.test(text);
     if (!hasImport) return;
-    // DOM에 이미 패널이 있으면 스킵
-    const pre = el.closest("pre");
-    if (pre?.nextElementSibling?.hasAttribute("data-slop-panel")) return;
-
+    if (el.hasAttribute("data-slop-scanned")) return;
+    el.setAttribute("data-slop-scanned", "1");
     const filename = guessFilename(el);
     analyzeAndRender(text, filename, (newEl) => insertAfterCode(el, newEl));
   });
@@ -116,6 +114,7 @@ const processedTextKeys = new Set();
 
 function scanResponseText() {
   document.querySelectorAll("message-content").forEach(el => {
+    if (el.hasAttribute("data-slop-scanned")) return;
     const text = el.innerText || "";
     if (text.length < 20) return;
 
@@ -139,6 +138,7 @@ function scanResponseText() {
     // DOM에 이미 텍스트 패널 있으면 스킵
     if (el.parentElement?.querySelector("[data-slop-text-panel]")) return;
 
+    el.setAttribute("data-slop-scanned", "1");
     console.log(`[Slop Detector] Gemini 패키지 감지:`, newPackages);
 
     analyzePackagesFromText(newPackages, (newEl) => {

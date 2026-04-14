@@ -64,14 +64,13 @@ let _pendingCard = null;
 // ── 케이스 1: 코드블록 스캔 ──────────────────────────────────────────────────
 function scanCodeBlocks() {
   document.querySelectorAll("pre code").forEach(el => {
+    if (el.hasAttribute("data-slop-scanned")) return;
     const text = (el.textContent || "").trim();
     if (text.length < 80) return;
     const hasImport = /^\s*(import |from .+ import)/m.test(text)
       || /require\(|"dependencies"/.test(text);
     if (!hasImport) return;
-    // DOM에 이미 패널이 있으면 스킵 (MutationObserver 중복 방지)
-    const pre = el.closest("pre");
-    if (pre?.nextElementSibling?.hasAttribute("data-slop-panel")) return;
+    el.setAttribute("data-slop-scanned", "1");
     const filename = guessFilename(el);
     analyzeAndRender(text, filename, (newEl) => insertAfterCode(el, newEl));
   });
@@ -326,6 +325,7 @@ function scanResponseText() {
   document.querySelectorAll(
     ".prose, [class*='prose'], div[data-is-streaming='false'], .font-claude-message"
   ).forEach(el => {
+    if (el.hasAttribute("data-slop-scanned")) return;
     const text = el.innerText || "";
     if (text.length < 20) return;
 
@@ -348,6 +348,7 @@ function scanResponseText() {
     // DOM에 이미 텍스트 패널이 있으면 스킵
     if (el.parentElement?.querySelector("[data-slop-text-panel]")) return;
 
+    el.setAttribute("data-slop-scanned", "1");
     console.log(`[Slop Detector] Claude 텍스트 패키지 감지:`, allPackages);
 
     analyzePackagesFromText(allPackages, (newEl) => {
