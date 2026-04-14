@@ -263,27 +263,32 @@ async def _analyse_package(
         # Layer 2 (source): 등록됨 → 소스 분석이 핵심, 메타데이터는 보조
         risk_layer = "source"
 
-        # 의심 가산 (메타데이터가 수상할 때)
-        meta_suspicion = 0
-        if reg_days is not None and reg_days <= 30:
-            meta_suspicion += 10
+        # 메타데이터 보정 (각 속성은 한 번만 평가)
+        meta_adjust = 0
+
+        # 등록 기간: 짧으면 가산, 길면 감산
+        if reg_days is not None:
+            if reg_days <= 30:
+                meta_adjust += 10
+            elif reg_days > 1000:
+                meta_adjust -= 10
+            elif reg_days > 365:
+                meta_adjust -= 5
+
+        # 버전 수: 적으면 가산, 많으면 감산
+        if version_count is not None:
+            if version_count <= 1:
+                meta_adjust += 5
+            elif version_count >= 50:
+                meta_adjust -= 10
+            elif version_count >= 10:
+                meta_adjust -= 5
+
+        # 유사 이름: 독립 시그널 (위 속성과 중복 없음)
         if has_similar:
-            meta_suspicion += 10
-        if version_count == 1:
-            meta_suspicion += 5
+            meta_adjust += 10
 
-        # 신뢰 감산 (메타데이터가 안전할 때 → 소스 점수 할인)
-        meta_trust = 0
-        if reg_days is not None and reg_days > 1000:
-            meta_trust += 10
-        elif reg_days is not None and reg_days > 365:
-            meta_trust += 5
-        if version_count is not None and version_count >= 50:
-            meta_trust += 10
-        elif version_count is not None and version_count >= 10:
-            meta_trust += 5
-
-        final_score = max(source_score_raw + meta_suspicion - meta_trust, 0)
+        final_score = max(source_score_raw + meta_adjust, 0)
         final_score = min(final_score, 100)
 
     if final_score >= 80:

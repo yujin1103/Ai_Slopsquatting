@@ -251,7 +251,7 @@ function buildPanel(results) {
     if (r.source_analyzed) {
       L2.innerHTML = `
         <b style="color:#475569;">L2 소스 분석</b>
-        <span style="color:#94a3b8;"> · 원본 ${r.source_score ?? 0}점${r.score !== r.source_score ? ` ${r.score > r.source_score ? '+ 의심 가산' : '- 신뢰 할인'} → ${r.score}점` : ""}</span><br>
+        <span style="color:#94a3b8;"> · 원본 ${r.source_score ?? 0}점${r.score !== r.source_score ? ` ${r.score > r.source_score ? '+ 메타 가산' : '- 메타 감산'} → ${r.score}점` : ""}</span><br>
         ${hasSrc
           ? srcSignals.map(s => `<span style="color:#9a3412;">${s}</span>`).join("<br>")
           : `<span style="color:#15803d;">✅ 악성 패턴 없음</span>`}
