@@ -20,6 +20,13 @@ function setCache(key, data) {
   analysisCache.set(key, { data, timestamp: Date.now() });
 }
 
+async function sha256(text) {
+  const buf = await crypto.subtle.digest("SHA-256",
+    new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf))
+    .map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
 // ── 위험도 상태 관리 ────────────────────────────────────────────────────────
 async function updateRiskState(analysisResult) {
   // 결과에서 슬롭스쿼팅 등 고위험 패키지가 있는지 확인 후 스토리지에 저장
@@ -47,7 +54,7 @@ async function checkHealth() {
 
 // ── 패키지 분석 ─────────────────────────────────────────────────────────────
 async function analyzePackages(packages) {
-  const cacheKey = `pkg_${packages.sort().join(",")}`;
+  const cacheKey = `pkg_${await sha256(packages.sort().join(","))}`;
   const cached = getFromCache(cacheKey);
   if (cached) return cached;
 
@@ -67,8 +74,7 @@ async function analyzePackages(packages) {
 
 // ── 코드 파싱 + 분석 ─────────────────────────────────────────────────────────
 async function parseAndAnalyze(filename, code) {
-  // 해시 대신 간단히 코드 길이나 앞뒤 문자열로 캐시 키 생성 (실제 배포시 해시 함수 권장)
-  const cacheKey = `code_${filename}_${code.length}_${code.slice(0, 20)}`;
+  const cacheKey = `code_${await sha256(filename + code)}`;
   const cached = getFromCache(cacheKey);
   if (cached) return cached;
 
