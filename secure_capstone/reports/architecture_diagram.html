@@ -3,404 +3,378 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Slopsquatting Detector - 프로젝트 구조도</title>
+<title>AI Slopsquatting Detector - System Architecture</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
     background: #f8f9fa;
     padding: 40px;
-    min-width: 1200px;
+    min-width: 1300px;
   }
-  h1 {
-    text-align: center;
-    font-size: 1.6rem;
-    color: #1a1a2e;
-    margin-bottom: 8px;
-  }
-  .subtitle {
-    text-align: center;
-    color: #666;
-    font-size: 0.85rem;
-    margin-bottom: 36px;
-  }
+  h1 { text-align: center; font-size: 1.6rem; color: #1a1a2e; margin-bottom: 6px; }
+  .subtitle { text-align: center; color: #666; font-size: 0.85rem; margin-bottom: 36px; }
 
-  .canvas {
-    position: relative;
-    width: 1120px;
-    margin: 0 auto;
-    height: 660px;
-  }
+  .canvas { position: relative; width: 1240px; margin: 0 auto; height: 780px; }
 
   .node {
-    position: absolute;
-    background: #fff;
-    border: 2px solid #ddd;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    transition: box-shadow 0.2s;
-    z-index: 2;
+    position: absolute; background: #fff; border: 2px solid #ddd; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s; z-index: 2;
   }
-  .node:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-  .node .icon { font-size: 2rem; margin-bottom: 6px; }
-  .node .label { font-size: 0.82rem; font-weight: 600; color: #333; text-align: center; line-height: 1.3; }
-  .node .sublabel { font-size: 0.68rem; color: #888; margin-top: 2px; text-align: center; }
+  .node:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.14); }
+  .node .icon { font-size: 1.8rem; margin-bottom: 5px; }
+  .node .label { font-size: 0.8rem; font-weight: 600; color: #333; text-align: center; line-height: 1.3; }
+  .node .sublabel { font-size: 0.66rem; color: #888; margin-top: 2px; text-align: center; line-height: 1.4; }
 
   .group {
-    position: absolute;
-    border: 2px dashed #bbb;
-    border-radius: 16px;
-    background: rgba(255,255,255,0.35);
-    z-index: 1;
+    position: absolute; border: 2px dashed #bbb; border-radius: 16px;
+    background: rgba(255,255,255,0.35); z-index: 1;
   }
   .group-label {
-    position: absolute;
-    top: -12px;
-    left: 18px;
-    background: #f8f9fa;
-    padding: 0 10px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: #555;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    position: absolute; top: -12px; left: 18px; background: #f8f9fa;
+    padding: 0 10px; font-size: 0.72rem; font-weight: 700; color: #555;
+    letter-spacing: 0.5px; text-transform: uppercase;
   }
 
   .node.user     { border-color: #6c63ff; background: #f0efff; }
+  .node.browser  { border-color: #4285f4; background: #e8f0fe; }
+  .node.ext      { border-color: #34a853; background: #e6f4ea; }
   .node.cli      { border-color: #ff9800; background: #fff3e0; }
   .node.docker   { border-color: #0db7ed; background: #e6f7fd; }
   .node.api      { border-color: #009688; background: #e0f2f1; }
   .node.parser   { border-color: #8bc34a; background: #f1f8e9; }
+  .node.source   { border-color: #e91e63; background: #fce4ec; }
   .node.pypi     { border-color: #3775a9; background: #e3f2fd; }
   .node.npm      { border-color: #cb3837; background: #fce4ec; }
   .node.report   { border-color: #ff5722; background: #fbe9e7; }
   .node.n8n      { border-color: #d84315; background: #fbe9e7; }
   .node.data     { border-color: #607d8b; background: #eceff1; }
+  .node.ai       { border-color: #9c27b0; background: #f3e5f5; }
 
   svg.arrows {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-    pointer-events: none;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
   }
-  .arrow-line {
-    stroke: #888;
-    stroke-width: 2.2;
-    fill: none;
-  }
-  .arrow-line.dashed { stroke-dasharray: 6 4; }
-  .arrow-line.blue   { stroke: #4285f4; }
-  .arrow-line.green  { stroke: #009688; }
-  .arrow-line.orange { stroke: #ff9800; }
-  .arrow-line.red    { stroke: #cb3837; }
-  .arrow-line.gray   { stroke: #999; }
-  .arrow-line.purple { stroke: #9c27b0; }
+  .al { stroke-width: 2.2; fill: none; }
+  .al.d { stroke-dasharray: 6 4; }
 
-  .arrow-label {
-    font-size: 0.65rem;
-    fill: #666;
-    font-weight: 600;
+  .at {
+    font-size: 0.63rem; font-weight: 600;
     font-family: 'Segoe UI', sans-serif;
   }
 
   .legend {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 0.7rem;
-    color: #555;
-    z-index: 3;
+    position: absolute; bottom: 0; right: 0; background: #fff;
+    border: 1px solid #ddd; border-radius: 10px; padding: 12px 16px;
+    font-size: 0.68rem; color: #555; z-index: 3;
   }
   .legend-title { font-weight: 700; margin-bottom: 6px; color: #333; }
   .legend-item { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
   .legend-dot {
-    width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid;
-    flex-shrink: 0;
+    width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid; flex-shrink: 0;
+  }
+
+  .flow-section {
+    max-width: 1240px; margin: 28px auto 0; background: #fff;
+    border-radius: 12px; padding: 22px 28px; border: 1px solid #ddd;
+  }
+  .flow-section h2 { font-size: 1rem; color: #1a1a2e; margin-bottom: 14px; }
+  .flow-cards { display: flex; gap: 14px; flex-wrap: wrap; }
+  .flow-card {
+    flex: 1; min-width: 160px; border-radius: 10px; padding: 14px;
+    font-size: 0.72rem; color: #555; line-height: 1.5;
+  }
+  .flow-card strong { font-size: 0.82rem; display: block; margin-bottom: 6px; }
+  .flow-card code {
+    background: #eee; padding: 1px 4px; border-radius: 3px; font-size: 0.66rem;
+  }
+  .badge {
+    display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 0.58rem;
+    font-weight: 600; color: #fff;
   }
 </style>
 </head>
 <body>
 
 <h1>AI Slopsquatting Detector &mdash; System Architecture</h1>
-<p class="subtitle">CLI + Docker API + n8n Workflow &nbsp;|&nbsp; 현재 구현 기준 구조도</p>
+<p class="subtitle">Chrome Extension + Docker API + CLI + n8n &nbsp;|&nbsp; Layer 1 (Metadata) + Layer 2 (Source Analysis)</p>
 
 <div class="canvas">
 
-  <svg class="arrows" viewBox="0 0 1120 660">
+  <svg class="arrows" viewBox="0 0 1240 780">
     <defs>
-      <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="#888">
-        <polygon points="0 0, 10 3.5, 0 7" />
-      </marker>
-      <marker id="ah-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="#ff9800">
-        <polygon points="0 0, 10 3.5, 0 7" />
-      </marker>
-      <marker id="ah-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="#009688">
-        <polygon points="0 0, 10 3.5, 0 7" />
-      </marker>
-      <marker id="ah-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="#4285f4">
-        <polygon points="0 0, 10 3.5, 0 7" />
-      </marker>
-      <marker id="ah-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="#cb3837">
-        <polygon points="0 0, 10 3.5, 0 7" />
-      </marker>
-      <marker id="ah-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="#999">
-        <polygon points="0 0, 10 3.5, 0 7" />
-      </marker>
-      <marker id="ah-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="#9c27b0">
-        <polygon points="0 0, 10 3.5, 0 7" />
-      </marker>
+      <marker id="a" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#888"><polygon points="0 0,9 3,0 6"/></marker>
+      <marker id="ag" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#34a853"><polygon points="0 0,9 3,0 6"/></marker>
+      <marker id="ab" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#4285f4"><polygon points="0 0,9 3,0 6"/></marker>
+      <marker id="at" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#009688"><polygon points="0 0,9 3,0 6"/></marker>
+      <marker id="ao" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#ff9800"><polygon points="0 0,9 3,0 6"/></marker>
+      <marker id="ar" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#cb3837"><polygon points="0 0,9 3,0 6"/></marker>
+      <marker id="ap" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#9c27b0"><polygon points="0 0,9 3,0 6"/></marker>
+      <marker id="ak" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto" fill="#e91e63"><polygon points="0 0,9 3,0 6"/></marker>
     </defs>
 
-    <!-- 개발자 → 소스 파일 -->
-    <line x1="90" y1="160" x2="90" y2="240" class="arrow-line gray" marker-end="url(#ah-gray)" />
-    <text x="100" y="205" class="arrow-label" fill="#888">코드 작성</text>
+    <!-- 개발자 → AI 사이트 -->
+    <line x1="100" y1="130" x2="100" y2="195" class="al" stroke="#888" marker-end="url(#a)"/>
+    <text x="110" y="168" class="at" fill="#888">질문</text>
 
-    <!-- 소스 파일 → CLI -->
-    <line x1="160" y1="290" x2="260" y2="290" class="arrow-line orange" marker-end="url(#ah-orange)" />
-    <text x="170" y="280" class="arrow-label" fill="#ff9800">파일 경로 전달</text>
+    <!-- AI 사이트 → Extension -->
+    <line x1="175" y1="250" x2="300" y2="250" class="al" stroke="#34a853" marker-end="url(#ag)"/>
+    <text x="195" y="240" class="at" fill="#34a853">DOM 감지</text>
 
-    <!-- CLI → FastAPI (요청) -->
-    <line x1="440" y1="278" x2="540" y2="278" class="arrow-line green" marker-end="url(#ah-green)" />
-    <text x="450" y="268" class="arrow-label" fill="#009688">HTTP POST :8001</text>
-    <text x="450" y="258" class="arrow-label" fill="#009688">/parse-and-analyze</text>
+    <!-- Extension → background.js → API -->
+    <line x1="440" y1="235" x2="555" y2="235" class="al" stroke="#009688" marker-end="url(#at)"/>
+    <text x="455" y="225" class="at" fill="#009688">HTTP :8001</text>
 
-    <!-- FastAPI → CLI (응답) -->
-    <line x1="540" y1="305" x2="440" y2="305" class="arrow-line green" marker-end="url(#ah-green)" />
-    <text x="455" y="322" class="arrow-label" fill="#009688">JSON 결과 반환</text>
+    <!-- API → Extension (응답) -->
+    <line x1="555" y1="265" x2="440" y2="265" class="al" stroke="#009688" marker-end="url(#at)"/>
+    <text x="460" y="283" class="at" fill="#009688">JSON 결과</text>
 
-    <!-- FastAPI → Hybrid Parser (내부) -->
-    <line x1="640" y1="245" x2="640" y2="165" class="arrow-line gray" marker-end="url(#ah-gray)" />
-    <text x="650" y="210" class="arrow-label">import 파싱</text>
+    <!-- Extension → 인라인 패널 -->
+    <line x1="370" y1="300" x2="370" y2="385" class="al" stroke="#34a853" marker-end="url(#ag)"/>
+    <text x="380" y="348" class="at" fill="#34a853">패널 삽입</text>
 
-    <!-- FastAPI → PyPI -->
-    <line x1="730" y1="270" x2="845" y2="200" class="arrow-line blue" marker-end="url(#ah-blue)" />
-    <text x="770" y="222" class="arrow-label" fill="#4285f4">HTTPS</text>
+    <!-- API → Parser -->
+    <line x1="660" y1="200" x2="660" y2="140" class="al" stroke="#888" marker-end="url(#a)"/>
+    <text x="670" y="175" class="at" fill="#888">import 파싱</text>
 
-    <!-- FastAPI → npm -->
-    <line x1="730" y1="305" x2="845" y2="370" class="arrow-line red" marker-end="url(#ah-red)" />
-    <text x="775" y="355" class="arrow-label" fill="#cb3837">HTTPS</text>
+    <!-- API → Source Analyzer -->
+    <line x1="660" y1="290" x2="660" y2="370" class="al" stroke="#e91e63" marker-end="url(#ak)"/>
+    <text x="670" y="335" class="at" fill="#e91e63">L2 소스 분석</text>
 
-    <!-- CLI → 터미널 결과 -->
-    <line x1="350" y1="330" x2="350" y2="415" class="arrow-line orange" marker-end="url(#ah-orange)" />
-    <text x="360" y="378" class="arrow-label" fill="#ff9800">Rich 테이블 출력</text>
+    <!-- API → PyPI -->
+    <line x1="745" y1="230" x2="890" y2="160" class="al" stroke="#4285f4" marker-end="url(#ab)"/>
+    <text x="800" y="180" class="at" fill="#4285f4">L1 메타데이터</text>
 
-    <!-- n8n → FastAPI -->
-    <line x1="400" y1="540" x2="558" y2="330" class="arrow-line purple dashed" marker-end="url(#ah-purple)" />
-    <text x="440" y="440" class="arrow-label" fill="#9c27b0">워크플로우 API 호출</text>
+    <!-- API → npm -->
+    <line x1="745" y1="270" x2="890" y2="340" class="al" stroke="#cb3837" marker-end="url(#ar)"/>
+    <text x="805" y="320" class="at" fill="#cb3837">L1 메타데이터</text>
 
-    <!-- n8n → HTML Report -->
-    <line x1="250" y1="555" x2="160" y2="555" class="arrow-line purple dashed" marker-end="url(#ah-purple)" />
-    <text x="170" y="546" class="arrow-label" fill="#9c27b0">리포트 생성</text>
+    <!-- Source Analyzer → PyPI CDN (archive) -->
+    <line x1="745" y1="420" x2="890" y2="210" class="al d" stroke="#e91e63" marker-end="url(#ak)"/>
+    <text x="830" y="305" class="at" fill="#e91e63">아카이브 스트리밍</text>
 
-    <!-- FastAPI → popular_packages.txt -->
-    <line x1="640" y1="330" x2="640" y2="415" class="arrow-line gray dashed" marker-end="url(#ah-gray)" />
-    <text x="650" y="378" class="arrow-label" fill="#888">인기 패키지 DB</text>
+    <!-- Source Analyzer → npm CDN -->
+    <line x1="745" y1="430" x2="890" y2="390" class="al d" stroke="#e91e63" marker-end="url(#ak)"/>
+
+    <!-- CLI → API -->
+    <line x1="220" y1="540" x2="560" y2="290" class="al" stroke="#ff9800" marker-end="url(#ao)"/>
+    <text x="350" y="415" class="at" fill="#ff9800">HTTP POST</text>
+
+    <!-- CLI → 터미널 -->
+    <line x1="150" y1="580" x2="150" y2="660" class="al" stroke="#ff9800" marker-end="url(#ao)"/>
+    <text x="160" y="625" class="at" fill="#ff9800">Rich 출력</text>
+
+    <!-- n8n → API -->
+    <line x1="380" y1="680" x2="580" y2="290" class="al d" stroke="#9c27b0" marker-end="url(#ap)"/>
+    <text x="445" y="500" class="at" fill="#9c27b0">워크플로우</text>
+
+    <!-- API → popular_packages -->
+    <line x1="610" y1="290" x2="530" y2="430" class="al d" stroke="#888" marker-end="url(#a)"/>
+    <text x="540" y="370" class="at" fill="#888">편집거리 비교</text>
 
   </svg>
 
-  <!-- ═══════════════════════════ 그룹 박스 ═══════════════════════════ -->
+  <!-- ═══ 그룹 박스 ═══ -->
 
-  <!-- Docker 그룹 -->
-  <div class="group" style="left:520px; top:80px; width:250px; height:380px; border-color:#0db7ed; background:rgba(13,183,237,0.04);">
-    <span class="group-label" style="color:#0db7ed;">DOCKER CONTAINER</span>
+  <!-- Browser 영역 -->
+  <div class="group" style="left:15px; top:55px; width:460px; height:370px; border-color:#4285f4; background:rgba(66,133,244,0.03);">
+    <span class="group-label" style="color:#4285f4;">BROWSER (Chrome)</span>
   </div>
 
-  <!-- 외부 레지스트리 그룹 -->
-  <div class="group" style="left:830px; top:130px; width:260px; height:300px; border-color:#9c27b0; background:rgba(156,39,176,0.03);">
+  <!-- Docker 컨테이너 -->
+  <div class="group" style="left:535px; top:55px; width:240px; height:420px; border-color:#0db7ed; background:rgba(13,183,237,0.04);">
+    <span class="group-label" style="color:#0db7ed;">DOCKER :8001</span>
+  </div>
+
+  <!-- 외부 레지스트리 -->
+  <div class="group" style="left:870px; top:85px; width:350px; height:350px; border-color:#9c27b0; background:rgba(156,39,176,0.03);">
     <span class="group-label" style="color:#9c27b0;">EXTERNAL REGISTRIES</span>
   </div>
 
-  <!-- 로컬 환경 그룹 -->
-  <div class="group" style="left:20px; top:60px; width:480px; height:400px; border-color:#607d8b; background:rgba(96,125,139,0.03);">
-    <span class="group-label" style="color:#607d8b;">DEVELOPER LOCAL ENVIRONMENT</span>
+  <!-- 로컬 CLI -->
+  <div class="group" style="left:15px; top:480px; width:460px; height:280px; border-color:#607d8b; background:rgba(96,125,139,0.03);">
+    <span class="group-label" style="color:#607d8b;">LOCAL CLI / AUTOMATION</span>
   </div>
 
-  <!-- ═══════════════════════════ 노드 ═══════════════════════════ -->
+  <!-- ═══ 노드 ═══ -->
 
   <!-- 개발자 -->
-  <div class="node user" style="left:40px; top:80px; width:100px;">
+  <div class="node user" style="left:45px; top:70px; width:110px;">
     <div class="icon">👨‍💻</div>
     <div class="label">개발자</div>
-    <div class="sublabel">AI 추천 코드 검증</div>
+    <div class="sublabel">AI에게 코드 질문</div>
   </div>
 
-  <!-- 소스 파일 -->
-  <div class="node data" style="left:40px; top:248px; width:120px;">
-    <div class="icon">📄</div>
-    <div class="label">소스 파일</div>
-    <div class="sublabel">.py / .js / .ts<br>package.json</div>
+  <!-- AI 사이트 -->
+  <div class="node ai" style="left:40px; top:200px; width:140px;">
+    <div class="icon">🤖</div>
+    <div class="label">AI 사이트</div>
+    <div class="sublabel">claude.ai<br>chatgpt.com<br>gemini.google.com</div>
   </div>
 
-  <!-- CLI 도구 -->
-  <div class="node cli" style="left:260px; top:248px; width:180px;">
-    <div class="icon">🖥️</div>
-    <div class="label">slop_check.py (CLI)</div>
-    <div class="sublabel">python slop_check.py &lt;파일&gt;<br>Rich 터미널 출력</div>
+  <!-- Chrome Extension -->
+  <div class="node ext" style="left:290px; top:195px; width:155px;">
+    <div class="icon">🧩</div>
+    <div class="label">Slop Detector<br>Extension</div>
+    <div class="sublabel">content scripts<br>background.js<br>SHA-256 캐시 (30min)</div>
   </div>
 
-  <!-- 터미널 결과 출력 -->
-  <div class="node report" style="left:245px; top:420px; width:210px;">
+  <!-- 인라인 UI 패널 -->
+  <div class="node ext" style="left:280px; top:390px; width:175px;">
     <div class="icon">🛡️</div>
-    <div class="label">분석 결과 (터미널)</div>
+    <div class="label">인라인 결과 패널</div>
     <div class="sublabel">
-      <span style="background:#27ae60;color:#fff;padding:1px 5px;border-radius:3px;font-size:0.6rem;">LOW</span>
-      <span style="background:#f1c40f;color:#333;padding:1px 5px;border-radius:3px;font-size:0.6rem;">MED</span>
-      <span style="background:#e67e22;color:#fff;padding:1px 5px;border-radius:3px;font-size:0.6rem;">HIGH</span>
-      <span style="background:#e74c3c;color:#fff;padding:1px 5px;border-radius:3px;font-size:0.6rem;">CRIT</span>
-      <br>시그널 상세 + 유사 패키지
+      <span class="badge" style="background:#27ae60;">LOW</span>
+      <span class="badge" style="background:#f1c40f;color:#333;">MED</span>
+      <span class="badge" style="background:#e67e22;">HIGH</span>
+      <span class="badge" style="background:#e74c3c;">CRIT</span>
+      <br>L1 + L2 상세 토글
     </div>
   </div>
 
   <!-- FastAPI -->
-  <div class="node api" style="left:548px; top:245px; width:190px;">
+  <div class="node api" style="left:555px; top:195px; width:200px;">
     <div class="icon">⚡</div>
     <div class="label">FastAPI 분석 API</div>
-    <div class="sublabel">:8001 (uvicorn)<br>/analyze&nbsp; /parse<br>/parse-and-analyze</div>
+    <div class="sublabel">/analyze<br>/parse-and-analyze<br>Layer 1 + Layer 2 판정</div>
   </div>
 
   <!-- Hybrid Parser -->
-  <div class="node parser" style="left:565px; top:100px; width:155px;">
+  <div class="node parser" style="left:575px; top:80px; width:165px;">
     <div class="icon">🔍</div>
     <div class="label">Hybrid Parser</div>
-    <div class="sublabel">import_parser.py<br>AST + Regex 하이브리드</div>
+    <div class="sublabel">import_parser.py<br>AST + Regex</div>
   </div>
 
-  <!-- popular_packages.txt -->
-  <div class="node data" style="left:570px; top:420px; width:160px;">
+  <!-- Source Analyzer -->
+  <div class="node source" style="left:570px; top:380px; width:180px;">
+    <div class="icon">🔬</div>
+    <div class="label">Source Analyzer</div>
+    <div class="sublabel">source_analyzer.py<br>아카이브 메모리 스트리밍<br>악성 패턴 9종 탐지</div>
+  </div>
+
+  <!-- popular_packages -->
+  <div class="node data" style="left:430px; top:435px; width:125px;">
     <div class="icon">📋</div>
-    <div class="label">인기 패키지 목록</div>
-    <div class="sublabel">popular_python_packages.txt<br>편집거리 비교 기준</div>
+    <div class="label">인기 패키지</div>
+    <div class="sublabel">321개 목록<br>편집거리 기준</div>
   </div>
 
   <!-- PyPI -->
-  <div class="node pypi" style="left:860px; top:155px; width:200px;">
-    <div class="icon" style="font-size:1.5rem;">🐍</div>
-    <div class="label">PyPI Registry API</div>
-    <div class="sublabel">pypi.org/pypi/{pkg}/json<br>존재 여부 + 등록일 + 버전 수<br>메타데이터 (repo, homepage)</div>
+  <div class="node pypi" style="left:900px; top:110px; width:290px;">
+    <div class="icon" style="font-size:1.4rem;">🐍</div>
+    <div class="label">PyPI Registry</div>
+    <div class="sublabel">
+      <b>L1:</b> pypi.org/pypi/{pkg}/json — 존재, 등록일, 버전 수<br>
+      <b>L2:</b> .tar.gz / .whl 아카이브 — 소스코드 스트리밍
+    </div>
   </div>
 
   <!-- npm -->
-  <div class="node npm" style="left:860px; top:330px; width:200px;">
-    <div class="icon" style="font-size:1.5rem;">📦</div>
-    <div class="label">npm Registry API</div>
-    <div class="sublabel">registry.npmjs.org/{pkg}<br>크로스 에코시스템 탐지<br>install script 검사</div>
+  <div class="node npm" style="left:900px; top:300px; width:290px;">
+    <div class="icon" style="font-size:1.4rem;">📦</div>
+    <div class="label">npm Registry</div>
+    <div class="sublabel">
+      <b>L1:</b> registry.npmjs.org/{pkg} — 존재, 메타데이터<br>
+      <b>L2:</b> .tgz 아카이브 — postinstall 검사
+    </div>
+  </div>
+
+  <!-- CLI -->
+  <div class="node cli" style="left:55px; top:510px; width:200px;">
+    <div class="icon">🖥️</div>
+    <div class="label">slop_check.py (CLI)</div>
+    <div class="sublabel">소스 파일 직접 분석<br><code>python slop_check.py script.py</code></div>
+  </div>
+
+  <!-- 터미널 결과 -->
+  <div class="node report" style="left:55px; top:660px; width:200px;">
+    <div class="icon">📊</div>
+    <div class="label">터미널 / HTML 리포트</div>
+    <div class="sublabel">Rich 테이블 출력<br>reports/ 디렉토리</div>
   </div>
 
   <!-- n8n -->
-  <div class="node n8n" style="left:270px; top:520px; width:180px;">
+  <div class="node n8n" style="left:300px; top:650px; width:180px;">
     <div class="icon">⚙️</div>
     <div class="label">n8n Workflow</div>
-    <div class="sublabel">자동화 워크플로우 엔진<br>:5679 (Docker)</div>
+    <div class="sublabel">자동화 엔진 :5679<br>Gemini → 분석 → 리포트</div>
   </div>
 
-  <!-- HTML Report -->
-  <div class="node report" style="left:40px; top:520px; width:150px;">
-    <div class="icon">📊</div>
-    <div class="label">HTML 리포트</div>
-    <div class="sublabel">reports/ 디렉토리<br>분석 결과 시각화</div>
-  </div>
-
-  <!-- ═══════════════════════════ 범례 ═══════════════════════════ -->
+  <!-- ═══ 범례 ═══ -->
   <div class="legend">
     <div class="legend-title">범례</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e6f4ea; border-color:#34a853;"></div>Chrome Extension</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e0f2f1; border-color:#009688;"></div>FastAPI 분석 서버</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fce4ec; border-color:#e91e63;"></div>Source Analyzer (L2)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e3f2fd; border-color:#3775a9;"></div>PyPI Registry</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fce4ec; border-color:#cb3837;"></div>npm Registry</div>
     <div class="legend-item">
-      <div class="legend-dot" style="background:#fff3e0; border-color:#ff9800;"></div>
-      CLI 도구 (slop_check.py)
-    </div>
-    <div class="legend-item">
-      <div class="legend-dot" style="background:#e0f2f1; border-color:#009688;"></div>
-      FastAPI 분석 서버 (Docker)
-    </div>
-    <div class="legend-item">
-      <div class="legend-dot" style="background:#e3f2fd; border-color:#3775a9;"></div>
-      PyPI 레지스트리
-    </div>
-    <div class="legend-item">
-      <div class="legend-dot" style="background:#fce4ec; border-color:#cb3837;"></div>
-      npm 레지스트리
+      <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#e91e63" stroke-width="2" stroke-dasharray="4 3"/></svg>
+      L2 소스 아카이브 스트리밍
     </div>
     <div class="legend-item">
       <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#9c27b0" stroke-width="2" stroke-dasharray="4 3"/></svg>
-      n8n 워크플로우 (자동화)
+      n8n 자동화
     </div>
   </div>
 
 </div>
 
-<!-- ═══════════════════════════ 분석 흐름 설명 ═══════════════════════════ -->
-<div style="max-width:1120px; margin:32px auto 0; background:#fff; border-radius:12px; padding:24px 30px; border:1px solid #ddd;">
-  <h2 style="font-size:1rem; color:#1a1a2e; margin-bottom:14px;">분석 흐름 (현재 구현)</h2>
-  <div style="display:flex; gap:16px; flex-wrap:wrap;">
+<!-- ═══ Layer 기반 분석 흐름 ═══ -->
+<div class="flow-section">
+  <h2>분석 파이프라인 (Layer 기반)</h2>
+  <div class="flow-cards">
 
-    <div style="flex:1; min-width:180px; background:#fff3e0; border-radius:10px; padding:14px; border-left:4px solid #ff9800;">
-      <strong style="font-size:0.82rem; color:#e65100;">1. 파일 입력</strong>
-      <p style="font-size:0.72rem; color:#555; margin-top:6px; line-height:1.5;">
-        개발자가 CLI로 소스 파일 지정<br>
-        <code style="background:#eee;padding:1px 4px;border-radius:3px;font-size:0.68rem;">python slop_check.py script.py</code>
-      </p>
+    <div class="flow-card" style="background:#e8f0fe; border-left:4px solid #4285f4;">
+      <strong style="color:#1a73e8;">1. 패키지명 추출</strong>
+      <b>Extension:</b> MutationObserver<br>
+      &rarr; 코드블록 / <code>pip install</code><br>
+      &rarr; 백틱 / import / 인기 패키지 매칭<br>
+      <b>CLI:</b> AST + Regex 하이브리드
     </div>
 
-    <div style="flex:1; min-width:180px; background:#f1f8e9; border-radius:10px; padding:14px; border-left:4px solid #8bc34a;">
-      <strong style="font-size:0.82rem; color:#33691e;">2. 하이브리드 파싱</strong>
-      <p style="font-size:0.72rem; color:#555; margin-top:6px; line-height:1.5;">
-        AST로 정적 import 추출<br>
-        Regex로 동적 import 탐지<br>
-        (importlib, __import__, pip install)
-      </p>
+    <div class="flow-card" style="background:#e0f2f1; border-left:4px solid #009688;">
+      <strong style="color:#00796b;">2. Layer 1 — 메타데이터</strong>
+      PyPI/npm API 조회<br>
+      &bull; 미등록 → <span class="badge" style="background:#e74c3c;">+70~80점</span><br>
+      &bull; 신규 등록 (7일) → +25점<br>
+      &bull; 합성 패턴 → +20점<br>
+      &bull; 유사 이름 → +20점
     </div>
 
-    <div style="flex:1; min-width:180px; background:#e0f2f1; border-radius:10px; padding:14px; border-left:4px solid #009688;">
-      <strong style="font-size:0.82rem; color:#00796b;">3. 패키지 검증</strong>
-      <p style="font-size:0.72rem; color:#555; margin-top:6px; line-height:1.5;">
-        PyPI / npm API 조회<br>
-        존재 여부 + 등록일 + 버전 수<br>
-        편집거리 유사도 비교<br>
-        합성 패턴 탐지
-      </p>
+    <div class="flow-card" style="background:#fce4ec; border-left:4px solid #e91e63;">
+      <strong style="color:#c2185b;">3. Layer 2 — 소스 분석</strong>
+      등록된 패키지만 실행<br>
+      &bull; 아카이브 메모리 스트리밍 (5MB 제한)<br>
+      &bull; 악성 패턴 9종 탐지<br>
+      &bull; base64+exec, credential theft 등<br>
+      &bull; Shannon 엔트로피 (난독화)
     </div>
 
-    <div style="flex:1; min-width:180px; background:#fbe9e7; border-radius:10px; padding:14px; border-left:4px solid #ff5722;">
-      <strong style="font-size:0.82rem; color:#d84315;">4. 위험도 판정</strong>
-      <p style="font-size:0.72rem; color:#555; margin-top:6px; line-height:1.5;">
-        시그널 기반 점수 합산 (0~100)<br>
-        <span style="background:#27ae60;color:#fff;padding:1px 5px;border-radius:3px;font-size:0.6rem;">LOW</span>
-        <span style="background:#f1c40f;color:#333;padding:1px 5px;border-radius:3px;font-size:0.6rem;">MEDIUM</span>
-        <span style="background:#e67e22;color:#fff;padding:1px 5px;border-radius:3px;font-size:0.6rem;">HIGH</span>
-        <span style="background:#e74c3c;color:#fff;padding:1px 5px;border-radius:3px;font-size:0.6rem;">CRITICAL</span>
-      </p>
+    <div class="flow-card" style="background:#fbe9e7; border-left:4px solid #ff5722;">
+      <strong style="color:#d84315;">4. 최종 판정</strong>
+      미등록 → L1 점수만<br>
+      등록됨 → L2 + 메타 보조<br><br>
+      <span class="badge" style="background:#27ae60;">LOW &lt;30</span>
+      <span class="badge" style="background:#f1c40f;color:#333;">MED 30~59</span>
+      <span class="badge" style="background:#e67e22;">HIGH 60~79</span>
+      <span class="badge" style="background:#e74c3c;">CRIT &ge;80</span>
     </div>
 
   </div>
 </div>
 
 <!-- 기술 스택 -->
-<div style="max-width:1120px; margin:16px auto 0; background:#fff; border-radius:12px; padding:18px 30px; border:1px solid #ddd; display:flex; gap:30px; flex-wrap:wrap;">
-  <div>
-    <strong style="font-size:0.78rem; color:#333;">API Server</strong>
-    <span style="font-size:0.72rem; color:#666;"> &mdash; FastAPI + uvicorn + httpx + rapidfuzz</span>
-  </div>
-  <div>
-    <strong style="font-size:0.78rem; color:#333;">Parser</strong>
-    <span style="font-size:0.72rem; color:#666;"> &mdash; Python AST + Regex 하이브리드 (py/js/ts/json 지원)</span>
-  </div>
-  <div>
-    <strong style="font-size:0.78rem; color:#333;">CLI</strong>
-    <span style="font-size:0.72rem; color:#666;"> &mdash; slop_check.py + Rich (터미널 테이블 출력)</span>
-  </div>
-  <div>
-    <strong style="font-size:0.78rem; color:#333;">Infra</strong>
-    <span style="font-size:0.72rem; color:#666;"> &mdash; Docker Compose (slop-api :8001 + n8n :5679)</span>
-  </div>
+<div class="flow-section" style="margin-top:14px; display:flex; gap:30px; flex-wrap:wrap; padding:16px 28px;">
+  <div><strong style="font-size:0.78rem;">Extension</strong><span style="font-size:0.72rem; color:#666;"> &mdash; Manifest V3, content scripts (Claude/ChatGPT/Gemini), SHA-256 캐시</span></div>
+  <div><strong style="font-size:0.78rem;">API Server</strong><span style="font-size:0.72rem; color:#666;"> &mdash; FastAPI + uvicorn + httpx + rapidfuzz (Docker :8001)</span></div>
+  <div><strong style="font-size:0.78rem;">Source Analyzer</strong><span style="font-size:0.72rem; color:#666;"> &mdash; 아카이브 메모리 스트리밍, 악성 패턴 9종, 엔트로피 분석</span></div>
+  <div><strong style="font-size:0.78rem;">Parser</strong><span style="font-size:0.72rem; color:#666;"> &mdash; Python AST + Regex 하이브리드 (py/js/ts/json)</span></div>
+  <div><strong style="font-size:0.78rem;">CLI</strong><span style="font-size:0.72rem; color:#666;"> &mdash; slop_check.py + Rich</span></div>
+  <div><strong style="font-size:0.78rem;">Automation</strong><span style="font-size:0.72rem; color:#666;"> &mdash; n8n Workflow (:5679) + Gemini API</span></div>
 </div>
 
 </body>
