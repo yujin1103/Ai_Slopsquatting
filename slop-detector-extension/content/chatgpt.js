@@ -62,9 +62,9 @@ function scanCodeBlocks() {
     const hasImport = /^\s*(import |from .+ import)/m.test(text)
       || /require\(|"dependencies"/.test(text);
     if (!hasImport) return;
-    const key = getKey(text);
-    if (processedKeys.has(key)) return;
-    processedKeys.add(key);
+    // DOM에 이미 패널이 있으면 스킵
+    const parent = el.closest("pre") || el;
+    if (parent.nextElementSibling?.hasAttribute("data-slop-panel")) return;
 
     const filename = guessFilename(el);
     analyzeAndRender(text, filename, (newEl) => insertAfterCodeBlock(el, newEl));
@@ -140,9 +140,6 @@ function scanResponseText() {
     const text = el.innerText || "";
     if (text.length < 20) return;
 
-    const key = `text::${text.length}::${text.slice(0, 60)}`;
-    if (processedTextKeys.has(key)) return;
-
     // pip install 패턴 추출
     const pipPackages = extractPackagesFromText(text);
 
@@ -163,7 +160,6 @@ function scanResponseText() {
     // DOM에 이미 텍스트 패널이 삽입되어 있으면 스킵 (타이밍 중복 방지)
     if (el.parentElement?.querySelector("[data-slop-text-panel]")) return;
 
-    processedTextKeys.add(key);
     console.log(`[Slop Detector] ChatGPT 텍스트 패키지 감지:`, allPackages);
 
     analyzePackagesFromText(allPackages, (newEl) => {

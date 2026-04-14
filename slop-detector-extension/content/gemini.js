@@ -79,9 +79,9 @@ function scanCodeBlocks() {
     const hasImport = /^\s*(import |from .+ import)/m.test(text)
       || /require\(|"dependencies"/.test(text);
     if (!hasImport) return;
-    const key = getKey(text);
-    if (processedKeys.has(key)) return;
-    processedKeys.add(key);
+    // DOM에 이미 패널이 있으면 스킵
+    const pre = el.closest("pre");
+    if (pre?.nextElementSibling?.hasAttribute("data-slop-panel")) return;
 
     const filename = guessFilename(el);
     analyzeAndRender(text, filename, (newEl) => insertAfterCode(el, newEl));
@@ -119,9 +119,6 @@ function scanResponseText() {
     const text = el.innerText || "";
     if (text.length < 20) return;
 
-    const key = `text::${text.length}::${text.slice(0, 60)}`;
-    if (processedTextKeys.has(key)) return;
-
     // 1단계: pip/npm install 패턴 (고신뢰)
     const installPackages = extractPackagesFromText(text);
 
@@ -142,7 +139,6 @@ function scanResponseText() {
     // DOM에 이미 텍스트 패널 있으면 스킵
     if (el.parentElement?.querySelector("[data-slop-text-panel]")) return;
 
-    processedTextKeys.add(key);
     console.log(`[Slop Detector] Gemini 패키지 감지:`, newPackages);
 
     analyzePackagesFromText(newPackages, (newEl) => {
