@@ -26,6 +26,10 @@
       {
         "command": "slopsquatting.checkHealth",
         "title": "Slopsquatting: Check API Status"
+      },
+      {
+        "command": "slopsquatting.replacePackage",
+        "title": "Slopsquatting: Replace with Suggested Package"
       }
     ],
     "configuration": {

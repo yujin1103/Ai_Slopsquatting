@@ -12,8 +12,16 @@ import { analyzePackages, checkHealth, clearCache } from './apiClient';
 import { initDiagnostics, updateDiagnostics, clearDiagnostics } from './diagnostics';
 import { createHoverProvider, storeResults } from './hoverProvider';
 import { initStatusBar, setScanning, setResult, setIdle, setOffline, setError } from './statusBar';
+import {
+  SuggestCodeLensProvider,
+  SuggestCodeActionProvider,
+  storeSuggestions,
+  clearSuggestions,
+  executeReplace,
+} from './suggestProvider';
 
 let debounceTimer: NodeJS.Timeout | undefined;
+let codeLensProvider: SuggestCodeLensProvider | undefined;
 
 /** 문서 스캔 실행 */
 async function scanDocument(document: vscode.TextDocument): Promise<void> {
@@ -50,10 +58,14 @@ async function scanDocument(document: vscode.TextDocument): Promise<void> {
     // 3. 결과 저장 (HoverProvider용)
     storeResults(document.uri.toString(), results);
 
-    // 4. Diagnostics 업데이트
+    // 4. 제안 데이터 저장 (CodeLens / CodeAction용)
+    storeSuggestions(document.uri.toString(), imports, results);
+    codeLensProvider?.refresh();
+
+    // 5. Diagnostics 업데이트
     const { total, risks } = updateDiagnostics(document, imports, results, minLevel);
 
-    // 5. 상태바 업데이트
+    // 6. 상태바 업데이트
     setResult(total, risks);
   } catch (err: any) {
     const isConnectionError =
@@ -102,6 +114,26 @@ export function activate(context: vscode.ExtensionContext): void {
     );
   }
 
+  // CodeLens Provider 등록 — "혹시 ~~를 찾으셨나요?" 힌트
+  codeLensProvider = new SuggestCodeLensProvider();
+  for (const lang of languages) {
+    context.subscriptions.push(
+      vscode.languages.registerCodeLensProvider({ language: lang }, codeLensProvider)
+    );
+  }
+
+  // CodeAction Provider 등록 — Quick Fix (Ctrl+.)
+  const codeActionProvider = new SuggestCodeActionProvider();
+  for (const lang of languages) {
+    context.subscriptions.push(
+      vscode.languages.registerCodeActionsProvider(
+        { language: lang },
+        codeActionProvider,
+        { providedCodeActionKinds: SuggestCodeActionProvider.providedCodeActionKinds }
+      )
+    );
+  }
+
   // ─── 이벤트 리스너 ──────────────────────────────
 
   // 실시간 타이핑
@@ -139,10 +171,11 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // 파일 닫기 — diagnostics 정리
+  // 파일 닫기 — diagnostics 및 제안 데이터 정리
   context.subscriptions.push(
     vscode.workspace.onDidCloseTextDocument((document) => {
       clearDiagnostics(document.uri);
+      clearSuggestions(document.uri.toString());
     })
   );
 
@@ -160,6 +193,19 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.window.showWarningMessage('열린 파일이 없습니다');
       }
     })
+  );
+
+  // 패키지 교체 — CodeLens / Quick Fix에서 호출
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'slopsquatting.replacePackage',
+      async (uri: vscode.Uri, imp: any, newPackage: string) => {
+        await executeReplace(uri, imp, newPackage);
+        // 교체 후 재스캔
+        const doc = await vscode.workspace.openTextDocument(uri);
+        scanDocument(doc);
+      }
+    )
   );
 
   // API 상태 확인
