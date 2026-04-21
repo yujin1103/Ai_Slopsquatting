@@ -161,8 +161,6 @@ GPT-4o 100회 호출 (20 질문 × 5회, python_ml 도메인):
 
 ## 7. 현재 한계
 
-- Anthropic Claude / Gemini 실험 미완료 (API 키 이슈)
-- Cargo(Rust) 에코시스템 미지원
 - 배포 시 사용자도 Docker 필요 → 하이브리드 구조(L1 JS 포팅) 전환 검토 중
 
 ---
