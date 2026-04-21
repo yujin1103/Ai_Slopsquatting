@@ -7,7 +7,10 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Linters", "Other"],
+  "categories": [
+    "Linters",
+    "Other"
+  ],
   "activationEvents": [
     "onLanguage:python",
     "onLanguage:javascript",
@@ -52,7 +55,12 @@
         },
         "slopsquatting.minRiskLevel": {
           "type": "string",
-          "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ],
           "default": "MEDIUM",
           "description": "Minimum risk level to display warnings"
         }
@@ -66,8 +74,9 @@
     "lint": "eslint src --ext ts"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
     "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.1",
     "typescript": "^5.3.0"
   }
 }
