@@ -182,20 +182,20 @@ function buildPanel(results) {
     font-size:12px; background:#fff;
   `;
 
-  // 요약 행
+  // 요약 행 (고정 높이, 넘치는 배지는 가로 스크롤로 한 줄 유지)
   const summary = document.createElement("div");
   summary.style.cssText = `
-    display:flex; align-items:center; gap:6px; padding:5px 10px;
+    display:flex; align-items:center; gap:6px; padding:6px 10px;
     background:${dangerous.length ? wc.dot + "18" : "#f0fdf4"};
-    cursor:pointer; user-select:none;
+    cursor:pointer; user-select:none; height:30px; box-sizing:border-box;
   `;
   summary.innerHTML = `
-    <span style="font-size:12px;">${dangerous.length ? "⚠️" : "✅"}</span>
-    <b style="color:#1e293b;font-size:12px;">Slop Detector</b>
-    <span style="color:#64748b;font-size:11px;">
+    <span style="font-size:12px;flex-shrink:0;">${dangerous.length ? "⚠️" : "✅"}</span>
+    <b style="color:#1e293b;font-size:12px;flex-shrink:0;">Slop Detector</b>
+    <span style="color:#64748b;font-size:11px;flex-shrink:0;">
       ${dangerous.length ? `${dangerous.length}개 위험` : "이상 없음"}
     </span>
-    <span style="display:flex;gap:3px;flex-wrap:wrap;flex:1;">
+    <span style="display:flex;gap:3px;flex:1;min-width:0;overflow:hidden;white-space:nowrap;">
       ${results.map(r => {
         const c = LEVEL[r.level];
         return `<span style="
@@ -203,6 +203,7 @@ function buildPanel(results) {
           padding:1px 6px;border-radius:99px;font-size:10px;
           background:${c.dot}22;color:${c.text};
           border:1px solid ${c.dot}44;font-family:monospace;
+          flex-shrink:0;
         "><span style="width:5px;height:5px;border-radius:50%;background:${c.dot};display:inline-block;"></span>${r.package}</span>`;
       }).join("")}
     </span>
@@ -267,10 +268,10 @@ function buildPanel(results) {
 
   panel.appendChild(detail);
 
-  // 토글
-  let open = dangerous.length > 0;
-  detail.style.display = open ? "block" : "none";
-  summary.querySelector(".slop-toggle").textContent = open ? "▾ 닫기" : "▸ 상세";
+  // 토글 (기본 닫힘)
+  let open = false;
+  detail.style.display = "none";
+  summary.querySelector(".slop-toggle").textContent = "▸ 상세";
   summary.addEventListener("click", () => {
     open = !open;
     detail.style.display = open ? "block" : "none";
