@@ -190,7 +190,7 @@ async def query_openai(
                     {"role": "user", "content": build_user_prompt(question_text)},
                 ],
                 temperature=0.7,
-                max_tokens=600,
+                max_completion_tokens=1000,  # GPT-5 계열은 max_tokens 미지원 → max_completion_tokens
             )
             latency = int((time.monotonic() - start) * 1000)
             raw = resp.choices[0].message.content or ""

@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import List
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)  # .env가 OS 환경변수(빈 ANTHROPIC_API_KEY 등)를 덮어쓰도록
 
 
 @dataclass
